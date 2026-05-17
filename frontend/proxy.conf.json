@@ -1,0 +1,6 @@
+{
+    "/api/**": {
+        "target": "https://instafake-bff.dev.localhost:7153",
+        "secure": true
+    }
+}
