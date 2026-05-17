@@ -1,0 +1,99 @@
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.main {
+    flex: 1 1 90%;
+    display: flex;
+}
+
+.about {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    border: 4px solid var(--tui-border-normal);
+    border-top: none;
+    border-left: none;
+    flex-direction: column;
+    display: flex;
+    gap: 50px;
+}
+
+.logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+
+    flex-direction: 0 0;
+
+    img {
+        width: 50%;
+        max-width: 700px;
+    }
+}
+
+.motto {
+    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font: var(--tui-typography-heading-h3);
+    font-size: 2.5vw;
+
+    .highlighted {
+        background: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.login-form {
+    box-sizing: border-box;
+    flex: 0 0 650px;
+    border-bottom: 4px solid var(--tui-border-normal);
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h3 {
+        font: var(--tui-typography-heading-h3);
+    }
+}
+
+.footer {
+    flex: 1 1 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font: var(--tui-typography-heading-h5);
+    color: var(--tui-text-tertiary);
+}
+
+.supported-identity-providers {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    color: var(--tui-text-action);
+}
+
+@media (max-width: 1024px) {
+    .about {
+        display: none;
+    }
+
+    .login-form {
+        flex: 1 1 100%;
+    }
+}

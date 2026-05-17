@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+$instagram-gradient: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
+
+html, body{
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    margin: 0;
+}
+
+app-root{
+    display: block;
+    height: 100%;
+    width: 100%;
+}
