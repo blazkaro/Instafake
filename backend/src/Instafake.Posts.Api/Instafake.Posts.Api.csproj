@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Instafake.Posts.Application\Instafake.Posts.Application.csproj" />
     <ProjectReference Include="..\Instafake.ServiceDefaults\Instafake.ServiceDefaults.csproj" />
   </ItemGroup>
 

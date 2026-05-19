@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Instafake.Posts.Domain\Instafake.Posts.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
