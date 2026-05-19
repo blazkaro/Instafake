@@ -4,4 +4,10 @@
     <Project Path="Instafake.BFF/Instafake.BFF.csproj" />
     <Project Path="Instafake.ServiceDefaults/Instafake.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/src/Posts/">
+    <Project Path="Instafake.Posts.Api/Instafake.Posts.Api.csproj" />
+    <Project Path="Instafake.Posts.Application/Instafake.Posts.Application.csproj" Id="8ac75fc6-8953-4ebd-9776-22c900b2d4d9" />
+    <Project Path="Instafake.Posts.Domain/Instafake.Posts.Domain.csproj" Id="df8c866c-70dc-4e72-b2b1-93736d21d498" />
+    <Project Path="Instafake.Posts.Infrastructure/Instafake.Posts.Infrastructure.csproj" Id="5d3d7b8f-40a2-48aa-ab22-cc6276f3f3d6" />
+  </Folder>
 </Solution>
