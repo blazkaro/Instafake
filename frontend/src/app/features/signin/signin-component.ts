@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { TuiHint, TuiIcon, TuiAppearance, TuiButton } from '@taiga-ui/core';
+import { TuiHint, TuiIcon, TuiButton } from '@taiga-ui/core';
+import { apiConfig, ApiPaths } from '../../shared/api-config';
 
 @Component({
   selector: 'app-signin-component',
@@ -7,4 +8,9 @@ import { TuiHint, TuiIcon, TuiAppearance, TuiButton } from '@taiga-ui/core';
   templateUrl: './signin-component.html',
   styleUrl: './signin-component.scss'
 })
-export class SigninComponent {}
+export class SigninComponent {
+
+  routeToSignInProvider(provider: 'GitHub') {
+    window.location.href = `${apiConfig.baseUrl.replace('/api', '')}${ApiPaths.Auth}/signin?provider=${provider}`
+  }
+}
