@@ -1,7 +1,7 @@
 ﻿using Instafake.BFF.Config;
 using Instafake.BFF.Constants;
 using Instafake.BFF.Controllers.Auth.Requests;
-using Instafake.BFF.Controllers.Responses;
+using Instafake.BFF.Controllers.Dtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +43,18 @@ public class AuthController(IOptions<FrontendConfig> frontendConfig) : Controlle
         var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
 
-        return Ok(new UserInfoResponse(id, userName, email));
+        return Ok(new UserInfoDto(id, userName, email));
+    }
+
+    [HttpGet("status")]
+    public async Task<IActionResult> GetAuthenticationStatusAsync()
+    {
+        if (User.Identity?.IsAuthenticated ?? false)
+        {
+            var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
+            return Ok(new AuthStatusDto(true, id));
+        }
+
+        return Ok(new AuthStatusDto(false, null));
     }
 }
