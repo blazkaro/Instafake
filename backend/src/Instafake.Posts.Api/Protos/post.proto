@@ -15,9 +15,10 @@ service Poster{
 }
 
 message CreatePostRequest{
-	string description = 1;
-	repeated string tags = 2;
-	repeated string multimedia_urls = 3;
+	string author_id = 1;
+	string description = 2;
+	repeated string tags = 3;
+	repeated string multimedia_urls = 4;
 }
 
 message CreatePostReply{
