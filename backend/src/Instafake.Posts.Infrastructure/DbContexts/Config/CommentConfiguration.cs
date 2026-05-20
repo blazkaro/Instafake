@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Instafake.Posts.Infrastructure.DbContexts.Config;
 
-internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
+internal class CommentConfiguration : IEntityTypeConfiguration<PostComment>
 {
-    public void Configure(EntityTypeBuilder<Comment> builder)
+    public void Configure(EntityTypeBuilder<PostComment> builder)
     {
         builder
             .HasKey(postComm => postComm.Id);
