@@ -3,7 +3,8 @@
 public class PostComment
 {
     public Guid Id { get; init; } = Guid.NewGuid();
-    public required User Author { get; init; }
+    public Guid PostId { get; set; }
+    public required Guid AuthorId { get; init; }
     public required string Content { get; init; }
     public DateTime CreatedAt { get; init; }
 }

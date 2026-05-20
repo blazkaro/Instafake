@@ -1,5 +1,6 @@
 using Auth0.AspNetCore.Authentication;
 using Instafake.BFF.Config;
+using Instafake.ServiceDefaults;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
