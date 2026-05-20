@@ -4,8 +4,8 @@ option csharp_namespace = "Instafake.Posts.Api.Protos";
 
 package post;
 
-import "Shared/pagination.proto";
-import "Shared/user.proto";
+import "Protos/Shared/pagination.proto";
+import "Protos/Shared/user.proto";
 import "google/protobuf/timestamp.proto";
 
 service Poster{
