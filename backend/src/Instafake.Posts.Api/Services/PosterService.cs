@@ -10,9 +10,9 @@ public class PosterService(ILogger<PosterService> logger) : Poster.PosterBase
         return base.CreatePost(request, context);
     }
 
-    public override Task<GetPostCommentsReply> GetPostComments(GetPostCommentsRequest request, ServerCallContext context)
+    public override Task<GetCommentsReply> GetComments(GetCommentsRequest request, ServerCallContext context)
     {
-        return base.GetPostComments(request, context);
+        return base.GetComments(request, context);
     }
 
     public override Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)

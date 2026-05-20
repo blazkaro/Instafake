@@ -11,7 +11,7 @@ import "google/protobuf/timestamp.proto";
 service Poster{
 	rpc CreatePost (CreatePostRequest) returns (CreatePostReply);
 	rpc GetPosts (GetPostsRequest) returns (GetPostsReply);
-	rpc GetPostComments (GetPostCommentsRequest) returns (GetPostCommentsReply);
+	rpc GetComments (GetCommentsRequest) returns (GetCommentsReply);
 }
 
 message CreatePostRequest{
@@ -49,19 +49,19 @@ message GetPostsReply{
 	pagination.CursorPagination next_cursor = 2;
 }
 
-message GetPostCommentsRequest{
+message GetCommentsRequest{
 	string post_id = 1;
 	optional pagination.CursorPagination cursor = 2;
 }
 
-message PostCommentDto{
+message CommentDto{
 	string id = 1;
 	user.Author author = 2;
 	string content = 3;
 	google.protobuf.Timestamp created_at = 4;
 }
 
-message GetPostCommentsReply{
-	repeated PostCommentDto comments = 1;
+message GetCommentsReply{
+	repeated CommentDto comments = 1;
 	pagination.CursorPagination next_cursor = 2;
 }

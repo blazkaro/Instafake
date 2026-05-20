@@ -16,7 +16,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(post => post.Author);
 
         builder
-            .HasMany(user => user.AuthoredPostComments)
+            .HasMany(user => user.AuthoredComments)
             .WithOne(postComm => postComm.Author)
             .OnDelete(DeleteBehavior.NoAction);
 

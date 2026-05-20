@@ -6,7 +6,7 @@ public class Post
     private readonly List<string> _tags = [];
 
     public Guid Id { get; init; } = Guid.NewGuid();
-    public required Guid AuthorId { get; init; }
+    public required string AuthorId { get; init; }
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
     public IReadOnlyCollection<string> MultimediaUrls => _multimediaUrls.AsReadOnly();

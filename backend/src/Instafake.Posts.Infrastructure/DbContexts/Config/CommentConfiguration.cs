@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Instafake.Posts.Infrastructure.DbContexts.Config;
 
-internal class PostCommentConfiguration : IEntityTypeConfiguration<PostComment>
+internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
 {
-    public void Configure(EntityTypeBuilder<PostComment> builder)
+    public void Configure(EntityTypeBuilder<Comment> builder)
     {
         builder
             .HasKey(postComm => postComm.Id);
@@ -22,7 +22,7 @@ internal class PostCommentConfiguration : IEntityTypeConfiguration<PostComment>
 
         builder
             .HasOne(postComm => postComm.Author)
-            .WithMany(post => post.AuthoredPostComments)
+            .WithMany(post => post.AuthoredComments)
             .HasForeignKey(postComm => postComm.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
     }

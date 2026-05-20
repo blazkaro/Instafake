@@ -14,7 +14,7 @@ internal class PostsDbContext(DbContextOptions<PostsDbContext> options) : DbCont
     {
         modelBuilder
             .ApplyConfiguration(new PostConfiguration())
-            .ApplyConfiguration(new PostCommentConfiguration())
+            .ApplyConfiguration(new CommentConfiguration())
             .ApplyConfiguration(new UserConfiguration())
             .ApplyConfiguration(new PostTagConfiguration());
     }
