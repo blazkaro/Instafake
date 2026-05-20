@@ -4,7 +4,7 @@ public class Post
 {
     private readonly HashSet<string> _likedBy = [];
     private readonly List<PostComment> _comments = [];
-    private readonly List<string> _imageUrls = [];
+    private readonly List<string> _multimediaUrls = [];
     private readonly List<string> _tags = [];
 
     public Guid Id { get; init; } = Guid.NewGuid();
@@ -29,9 +29,9 @@ public class Post
         _comments.Add(comment);
     }
 
-    public void AddImage(string url)
+    public void AddMultimedia(string url)
     {
-        _imageUrls.Add(url);
+        _multimediaUrls.Add(url);
     }
 
     public void AddTag(string tag)
