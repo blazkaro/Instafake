@@ -29,13 +29,13 @@ public class Post
         _comments.Add(comment);
     }
 
-    public void AddMultimedia(string url)
+    public void AddMultimedia(params string[] url)
     {
-        _multimediaUrls.Add(url);
+        _multimediaUrls.AddRange(url);
     }
 
-    public void AddTag(string tag)
+    public void AddTag(params string[] tag)
     {
-        _tags.Add(tag);
+        _tags.AddRange(tag);
     }
 }
