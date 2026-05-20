@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Instafake.Posts.Api/Instafake.Posts.Api.csproj", "Instafake.Posts.Api/"]
+COPY ["Instafake.Posts.Application/Instafake.Posts.Application.csproj", "Instafake.Posts.Application/"]
+COPY ["Instafake.Posts.Domain/Instafake.Posts.Domain.csproj", "Instafake.Posts.Domain/"]
+COPY ["Instafake.ServiceDefaults/Instafake.ServiceDefaults.csproj", "Instafake.ServiceDefaults/"]
 RUN dotnet restore "./Instafake.Posts.Api/Instafake.Posts.Api.csproj"
 COPY . .
 WORKDIR "/src/Instafake.Posts.Api"
