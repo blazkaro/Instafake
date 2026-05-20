@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option csharp_namespace = "Instafake.Posts.Api.Protos";
+
+package pagination;
+
+import "google/protobuf/timestamp.proto";
+
+message CursorPagination{
+	google.protobuf.Timestamp created_at = 1;
+	string id = 2;
+}

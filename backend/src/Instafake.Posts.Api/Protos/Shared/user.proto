@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option csharp_namespace = "Instafake.Posts.Api.Protos";
+
+package user;
+
+message Author{
+	string id = 1;
+	string name = 2;
+	string avatar_url = 3;
+}
