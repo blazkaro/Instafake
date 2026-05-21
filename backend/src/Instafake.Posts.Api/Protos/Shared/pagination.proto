@@ -7,6 +7,7 @@ package pagination;
 import "google/protobuf/timestamp.proto";
 
 message CursorPagination{
-	google.protobuf.Timestamp created_at = 1;
+	google.protobuf.Timestamp last_item_created_at = 1;
 	string id = 2;
+	int32 page_size = 3;
 }

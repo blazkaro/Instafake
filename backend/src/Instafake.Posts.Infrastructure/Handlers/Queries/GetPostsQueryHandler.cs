@@ -1,18 +1,19 @@
 ﻿using Instafake.Posts.Application.Queries;
 using Instafake.Posts.Application.Queries.Dtos;
+using Instafake.Posts.Application.Queries.Pagination;
 using Instafake.Posts.Infrastructure.DbContexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Posts.Infrastructure.Handlers.Queries;
 
-internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, IReadOnlyList<PostDto>>
+internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, CursorPaginationResult<IReadOnlyList<PostDto>>>
 {
     private readonly PostsDbContext _dbContext = dbContext;
 
     private const int FALLBACK_PAGE_SIZE = 20;
 
-    public async Task<IReadOnlyList<PostDto>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<CursorPaginationResult<IReadOnlyList<PostDto>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Posts.AsNoTracking();
 
@@ -25,7 +26,7 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
         if (request.Cursor is not null && Guid.TryParse(request.Cursor.Id, out var cursorId))
             query = query.Where(p => p.CreatedAt < request.Cursor.LastItemCreatedAt || (p.CreatedAt == request.Cursor.LastItemCreatedAt && p.Id < cursorId));
 
-        return await query
+        var posts = await query
             .OrderByDescending(p => p.CreatedAt)
             .ThenByDescending(p => p.Id)
             .Take(request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE)
@@ -42,5 +43,19 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
                 p.Comments.Count
             ))
             .ToListAsync(cancellationToken);
+
+        var lastPost = posts.LastOrDefault();
+        var nextCursor = lastPost is not null ? new CursorPagination
+        {
+            Id = lastPost.Id,
+            LastItemCreatedAt = lastPost.CreatedAt,
+            PageSize = request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE
+        } : null;
+
+        return new()
+        {
+            Result = posts,
+            NextCursor = nextCursor
+        };
     }
 }

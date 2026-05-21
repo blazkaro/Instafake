@@ -15,7 +15,13 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.80.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Instafake.Posts.Application\Instafake.Posts.Application.csproj" />
+    <ProjectReference Include="..\Instafake.Posts.Infrastructure\Instafake.Posts.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

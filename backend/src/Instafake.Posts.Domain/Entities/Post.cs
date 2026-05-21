@@ -3,7 +3,7 @@
 public class Post
 {
     private readonly List<string> _multimediaUrls = [];
-    private readonly List<string> _tags = [];
+    private readonly HashSet<string> _tags = [];
 
     public Guid Id { get; init; } = Guid.NewGuid();
     public required string AuthorId { get; init; }
@@ -12,13 +12,16 @@ public class Post
     public IReadOnlyCollection<string> MultimediaUrls => _multimediaUrls.AsReadOnly();
     public IReadOnlyCollection<string> Tags => _multimediaUrls.AsReadOnly();
 
-    public void AddMultimedia(params string[] url)
+    public void AddMultimedia(params string[] urls)
     {
-        _multimediaUrls.AddRange(url);
+        _multimediaUrls.AddRange(urls);
     }
 
-    public void AddTag(params string[] tag)
+    public void AddTag(params string[] tags)
     {
-        _tags.AddRange(tag);
+        foreach (var tag in tags)
+        {
+            _tags.Add(tag);
+        }
     }
 }

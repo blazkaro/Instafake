@@ -16,6 +16,11 @@ services.AddAuth0WebAppAuthentication(cfg =>
     cfg.ClientSecret = idp.GetValue<string>("ClientSecret");
     cfg.CallbackPath = idp.GetValue<string>("CallbackPath");
     cfg.ResponseType = OpenIdConnectResponseType.Code;
+    cfg.Scope = "openid profile offline_access";
+}).WithAccessToken(cfg =>
+{
+    cfg.Audience = idp.GetValue<string>("Audience");
+    cfg.UseRefreshTokens = true;
 });
 
 services.AddAuthorization();

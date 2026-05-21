@@ -5,7 +5,7 @@ using Instafake.Posts.Infrastructure.Extensions;
 
 namespace Instafake.Posts.Infrastructure.Repositories;
 
-internal class CommentsRepository(PostsDbContext dbContext) : RepositoryBase<Infrastructure.Entities.PostComment, PostsDbContext>(dbContext), ICommentRepository
+internal class CommentRepository(PostsDbContext dbContext) : RepositoryBase<Infrastructure.Entities.PostComment, PostsDbContext>(dbContext), ICommentRepository
 {
     public async Task<Comment> SaveAsync(Comment comment, CancellationToken cancellationToken = default)
     {

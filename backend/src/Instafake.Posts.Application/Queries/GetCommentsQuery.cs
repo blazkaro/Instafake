@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Instafake.Posts.Application.Queries;
 
-public record GetCommentsQuery(Guid PostId, CursorPagination? Cursor) : IRequest<IReadOnlyList<CommentDto>>
+public record GetCommentsQuery(Guid PostId, CursorPagination? Cursor) : IRequest<CursorPaginationResult<IReadOnlyCollection<CommentDto>>>
 {
 }

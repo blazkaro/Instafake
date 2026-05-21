@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Instafake.Posts.Application.Queries;
 
-public record GetPostsQuery(string UserId, string? AuthorId, string?[] Tags, CursorPagination? Cursor) : IRequest<IReadOnlyList<PostDto>>
+public record GetPostsQuery(string UserId, string? AuthorId, string?[] Tags, CursorPagination? Cursor) : IRequest<CursorPaginationResult<IReadOnlyList<PostDto>>>
 {
 }

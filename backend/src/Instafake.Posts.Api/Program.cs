@@ -1,13 +1,30 @@
 using Instafake.Posts.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var jwtBearer = builder.Configuration.GetSection("JwtBearer");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
+    {
+        cfg.Authority = jwtBearer.GetValue<string>("Authority");
+        cfg.Audience = jwtBearer.GetValue<string>("Audience");
+        cfg.SaveToken = false;
+    });
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.Run();
+app.MapGrpcService<PosterService>()
+    .RequireAuthorization(policy =>
+    {
+        policy.RequireAuthenticatedUser();
+    });
+
+await app.RunAsync();
