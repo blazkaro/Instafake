@@ -15,10 +15,9 @@ service Poster{
 }
 
 message CreatePostRequest{
-	string author_id = 1;
-	string description = 2;
-	repeated string tags = 3;
-	repeated string multimedia_urls = 4;
+	string description = 1;
+	repeated string tags = 2;
+	repeated string multimedia_urls = 3;
 }
 
 message CreatePostReply{
@@ -26,10 +25,9 @@ message CreatePostReply{
 }
 
 message GetPostsRequest{
-	string user_id = 1;
-	repeated string tags = 2;
-	optional string author_id = 3;
-	optional pagination.CursorPagination cursor = 4;
+	repeated string tags = 1;
+	optional string author_id = 2;
+	optional pagination.CursorPagination cursor = 3;
 }
 
 message PostDto{
