@@ -12,6 +12,6 @@ export class UserService {
 
   checkAuthStatus(): Observable<AuthStatus> {
     return this.http
-      .get<AuthStatus>(`${apiConfig.baseUrl}${ApiPaths.Auth}/status`)
+      .get<AuthStatus>(`api${ApiPaths.Auth}/status`, { withCredentials: true })
   }
 }

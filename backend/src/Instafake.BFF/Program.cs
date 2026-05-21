@@ -1,6 +1,7 @@
 using Auth0.AspNetCore.Authentication;
 using Instafake.BFF.Config;
 using Instafake.ServiceDefaults;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,12 +24,31 @@ services.AddAuth0WebAppAuthentication(cfg =>
     cfg.UseRefreshTokens = true;
 });
 
+builder.Services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.Cookie.Domain = ".dev.localhost";
+});
+
+var frontend = builder.Configuration.GetRequiredSection("Frontend");
+services.Configure<FrontendConfig>(frontend);
+
+services.AddCors(cfg =>
+{
+    cfg.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(frontend.GetValue<string>("Uri"));
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+        policy.AllowCredentials();
+    });
+});
+
 services.AddAuthorization();
-
-services.Configure<FrontendConfig>(builder.Configuration.GetRequiredSection("Frontend"));
-
 builder.AddServiceDefaults();
+
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
