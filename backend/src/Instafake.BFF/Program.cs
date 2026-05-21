@@ -1,49 +1,23 @@
+using Auth0.AspNetCore.Authentication;
 using Instafake.BFF.Config;
-using Instafake.BFF.Db.DbContexts;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 services.AddControllers();
 
-var idp = builder.Configuration.GetRequiredSection("IdentityProviders");
-services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
-
-services.AddAuthorization();
-
-services.AddDbContext<OpenIddictDbContext>(cfg =>
+var idp = builder.Configuration.GetRequiredSection("IdP");
+services.AddAuth0WebAppAuthentication(cfg =>
 {
-    cfg.UseInMemoryDatabase("OpenIddict");
-    cfg.UseOpenIddict();
+    cfg.Domain = idp.GetValue<string>("Domain");
+    cfg.ClientId = idp.GetValue<string>("ClientId");
+    cfg.ClientSecret = idp.GetValue<string>("ClientSecret");
+    cfg.CallbackPath = idp.GetValue<string>("CallbackPath");
+    cfg.ResponseType = OpenIdConnectResponseType.Code;
 });
 
-services.AddOpenIddict()
-    .AddCore(cfg =>
-    {
-        cfg.UseEntityFrameworkCore()
-            .UseDbContext<OpenIddictDbContext>();
-    })
-    .AddClient(options =>
-    {
-        options.AllowAuthorizationCodeFlow();
-
-        options.AddDevelopmentSigningCertificate()
-            .AddDevelopmentEncryptionCertificate();
-
-        options.UseAspNetCore()
-            .EnableRedirectionEndpointPassthrough();
-
-        options.UseWebProviders()
-            .AddGitHub(cfg =>
-            {
-                cfg.SetClientId(idp.GetValue<string>("GitHub:ClientId"));
-                cfg.SetClientSecret(idp.GetValue<string>("GitHub:ClientSecret"));
-                cfg.SetRedirectUri(idp.GetValue<string>("GitHub:CallbackPath"));
-            });
-    });
+services.AddAuthorization();
 
 services.Configure<FrontendConfig>(builder.Configuration.GetRequiredSection("Frontend"));
 

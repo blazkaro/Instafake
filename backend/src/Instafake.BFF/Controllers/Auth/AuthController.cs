@@ -1,6 +1,5 @@
-﻿using Instafake.BFF.Config;
-using Instafake.BFF.Constants;
-using Instafake.BFF.Controllers.Auth.Requests;
+﻿using Auth0.AspNetCore.Authentication;
+using Instafake.BFF.Config;
 using Instafake.BFF.Controllers.Dtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,21 +17,17 @@ public class AuthController(IOptions<FrontendConfig> frontendConfig) : Controlle
     private readonly IOptions<FrontendConfig> _frontendConfig = frontendConfig;
 
     [HttpGet("signin")]
-    public async Task<IActionResult> HandleSignInAsync([FromQuery] SignInRequest req)
+    public async Task HandleSignInAsync(string returnUrl = "/")
     {
-        if (req.RedirectPath is not null && !req.RedirectPath.StartsWith('/'))
-            req.RedirectPath = null; // if path isn't local ignore it to prevent open redirection attacks
+        if (!returnUrl.StartsWith('/'))
+            returnUrl = "/"; // if path isn't local ignore it to prevent open redirection attacks
 
-        var redirectUri = _frontendConfig.Value.Uri + req.RedirectPath;
-        return Challenge(new AuthenticationProperties { RedirectUri = redirectUri }, req.Provider);
-    }
+        var redirectUri = $"{_frontendConfig.Value.Uri.ToString().TrimEnd('/')}{returnUrl}";
+        var authProperties = new LoginAuthenticationPropertiesBuilder()
+            .WithRedirectUri(redirectUri)
+            .Build();
 
-    [HttpGet($"callback/{SupportedIdp.GitHub}")]
-    public async Task<IActionResult> HandleGitHubCallbackAsync()
-    {
-        // At this point, the idp response has been checked by OpenIddict, so everything is valid
-        var result = await HttpContext.AuthenticateAsync(SupportedIdp.GitHub);
-        return SignIn(result.Principal!, result.Properties ?? new());
+        await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authProperties);
     }
 
     [HttpGet("user")]
@@ -40,10 +35,10 @@ public class AuthController(IOptions<FrontendConfig> frontendConfig) : Controlle
     public async Task<IActionResult> GetUserInfoAsync()
     {
         var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
-        var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)!.Value;
-        var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value;
+        var userName = User.Claims.FirstOrDefault(c => c.Type == "nickname")?.Value ?? User.Claims.FirstOrDefault(c => c.Type == "name")!.Value;
+        var avatarUrl = User.Claims.FirstOrDefault(c => c.Type == "picture")!.Value;
 
-        return Ok(new UserInfoDto(id, userName, email));
+        return Ok(new UserInfoDto(id, userName, avatarUrl));
     }
 
     [HttpGet("status")]
