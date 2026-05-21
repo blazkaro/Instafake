@@ -10,7 +10,7 @@ import { apiConfig, ApiPaths } from '../../shared/api-config';
 })
 export class SigninComponent {
 
-  routeToSignInProvider(provider: 'GitHub') {
-    window.location.href = `${apiConfig.baseUrl.replace('/api', '')}${ApiPaths.Auth}/signin?provider=${provider}`
+  redirectToIdentityProvider() {
+    window.location.href = `${apiConfig.baseUrl.replace('/api', '')}${ApiPaths.Auth}/signin`
   }
 }

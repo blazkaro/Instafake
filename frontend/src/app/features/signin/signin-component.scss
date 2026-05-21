@@ -77,8 +77,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font: var(--tui-typography-heading-h5);
+    font: var(--tui-typography-heading-h6);
     color: var(--tui-text-tertiary);
+    font-style: italic;
 }
 
 .supported-identity-providers {
