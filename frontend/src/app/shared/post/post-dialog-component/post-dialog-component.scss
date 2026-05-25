@@ -1,0 +1,71 @@
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+.slider {
+    height: 100%;
+    position: relative;
+}
+
+.slides {
+    height: 100%;
+}
+
+img {
+    width: 100%;
+    overflow: auto;
+}
+
+.actions {
+    position: absolute;
+    right: 10px;
+    bottom: 10%;
+}
+
+.action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 60px;
+    height: 60px;
+    font-size: 12px;
+}
+
+[data-appearance="primary-positive"] {
+    background-color: var(--tui-status-positive);
+    color: var(--tui-text-primary);
+
+    &:hover {
+        // a bit brighter than --tui-stataus-positive
+        background-color: #67E6B7;
+    }
+}
+
+.description {
+    tui-avatar-labeled {
+        float: left;
+    }
+}
+
+[tuiAvatar] {
+    border: 1px solid var(--tui-border-normal);
+}
+
+.tags {
+    clear: both;
+    color: var(--tui-text-secondary);
+}
+
+.post-about{
+    margin-top: 10px;
+    overflow: auto;
+    max-height: 200px;
+}
+
+.created-at {
+    color: var(--tui-text-secondary);
+    font-size: 12px;
+}

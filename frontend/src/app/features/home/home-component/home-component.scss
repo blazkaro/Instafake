@@ -1,0 +1,79 @@
+.container {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1260px;
+    box-shadow: var(--tui-shadow-popup);
+    border-radius: var(--tui-radius-l);
+}
+
+.nav {
+    width: 100%;
+    height: 60px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--tui-background-neutral-1);
+}
+
+.logo {
+    flex: 1 1 20%;
+    font-size: 40px;
+    font-family: "Crafty Girls", cursive;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-style: normal;
+    background: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.search-bar {
+    flex: 1 1 80%;
+}
+
+.my-profile {
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.posts {
+    box-sizing: border-box;
+    padding: 50px;
+    width: 100%;
+    height: calc(100% - 60px);
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px 0;
+}
+
+.post{
+    display: block;
+    width: 300px;
+    aspect-ratio: 9/16;
+}
+
+.avatar:hover {
+    cursor: pointer;
+    animation: shakeAnim 0.5s ease-in-out;
+}
+
+@media(max-width: 500px){
+    .logo{
+        display: none;
+    }
+
+    .post{
+        width: 100%;
+    }
+}

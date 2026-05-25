@@ -1,1 +1,22 @@
-<p>home-component works!</p>
+<div class="container">
+    <div class="nav">
+        <div class="logo">
+            Instafake
+        </div>
+        <div class="search-bar">
+            <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m">
+                <input type="text" tuiInput placeholder="Search by @username or #tag">
+            </tui-textfield>
+        </div>
+        <div class="my-profile">
+            <div class="avatar" size="l" tuiAvatar tuiAvatarOutline="var(--tui-background-accent-2)">
+                <img src="{{userService.user()?.avatarUrl}}" alt="{{userService.user()?.name}}">
+            </div>
+        </div>
+    </div>
+    <div class="posts">
+        @for (post of posts; track post.id) {
+        <app-post-component [post]="post" class="post"></app-post-component>
+        }
+    </div>
+</div>

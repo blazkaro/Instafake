@@ -1,0 +1,18 @@
+<div appearance="floating" tuiCardLarge class="container" [style.background-image]="`url(${post.multimediaUrls[0]})`" (click)="openPost();">
+    <header tuiHeader>
+        <h2 tuiTitle="m" class="author-details">
+            <div class="avatar" size="s" tuiAvatar>
+                <img src="{{post.author.avatarUrl}}" alt="{{post.author.name}}">
+            </div>
+            <div class="author-name">
+                {{post.author.name}}
+            </div>
+        </h2>
+        <aside tuiAccessories>
+            <div iconStart="@tui.images" size="xl" tuiBadge class="post-image-badge" appearance="primary">
+                {{post.multimediaUrls.length}}
+            </div>
+        </aside>
+    </header>
+    <footer></footer>
+</div>

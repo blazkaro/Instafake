@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Crafty+Girls&display=swap');
+
 $instagram-gradient: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
 
 html, body{
@@ -11,4 +13,28 @@ app-root{
     display: block;
     height: 100%;
     width: 100%;
+}
+
+@keyframes shakeAnim {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    15% {
+        transform: translateX(-2px);
+    }
+
+    30% {
+        transform: translateX(2px);
+    }
+
+    45% {
+        transform: translateX(-1px);
+    }
+
+    60% {
+        transform: translateX(1px);
+    }
 }

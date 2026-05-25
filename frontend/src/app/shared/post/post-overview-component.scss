@@ -1,0 +1,30 @@
+.container {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    // override taiga ui appearancce
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+.author-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    // override taiga ui header
+    font-family: "Crafty Girls", cursive !important;
+    gap: 8px !important;
+
+    &:hover {
+        animation: shakeAnim 0.5s ease-in-out;
+    }
+}
+
+.author-name {
+    background: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
