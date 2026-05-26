@@ -1,4 +1,5 @@
 using Instafake.Posts.Api.Services;
+using Instafake.Posts.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddGrpc();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

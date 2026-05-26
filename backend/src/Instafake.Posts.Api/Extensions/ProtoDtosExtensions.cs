@@ -24,7 +24,7 @@ public static class ProtoDtosExtensions
             return cursor is not null ? new()
             {
                 Id = cursor.Id,
-                LastItemCreatedAt = cursor.LastItemCreatedAt.ToTimestamp(),
+                LastItemCreatedAt = cursor.LastItemCreatedAt.AsUtc().ToTimestamp(),
                 PageSize = cursor.PageSize
             } : null;
         }

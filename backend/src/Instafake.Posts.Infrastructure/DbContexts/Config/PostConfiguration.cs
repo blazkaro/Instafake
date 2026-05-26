@@ -15,6 +15,9 @@ internal class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasIndex(post => post.AuthorId);
 
         builder
+            .HasIndex(post => post.CreatedAt);
+
+        builder
             .HasOne(post => post.Author)
             .WithMany(user => user.AuthoredPosts)
             .HasForeignKey(post => post.AuthorId)

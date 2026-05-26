@@ -17,7 +17,7 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
     {
         var query = _dbContext.Posts.AsNoTracking();
 
-        if (string.IsNullOrEmpty(request.AuthorId))
+        if (!string.IsNullOrEmpty(request.AuthorId))
             query = query.Where(p => p.AuthorId == request.AuthorId);
 
         if (request.Tags is not null && request.Tags.Length != 0)
