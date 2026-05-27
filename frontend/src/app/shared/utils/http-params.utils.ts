@@ -1,23 +1,24 @@
 import { HttpParams } from '@angular/common/http';
-import { CursorPagination } from '../pagination/cursor-pagination';
+import { CursorPagination, Pagination } from '../pagination/cursor-pagination';
 
-export function addCursorPaginationParams(
+export function addPaginationParams(
     params: HttpParams,
-    cursor?: CursorPagination | null
+    pagination?: Pagination | null
 ): HttpParams {
-    if (cursor == null || cursor == undefined) return params;
+    if (pagination == null || pagination == undefined) return params;
 
-    if (cursor.id != null) {
-        params = params.set('cursor.id', cursor.id);
+    if (pagination.pageSize != null) {
+        params = params.set('pagination.pageSize', pagination.pageSize);
     }
 
-    if (cursor.lastItemCreatedAt != null) {
-        params = params.set('cursor.lastItemCreatedAt', cursor.lastItemCreatedAt.toISOString());
+    if (pagination.cursor == null)
+        return params;
+
+    if (!pagination.cursor.lastItemCreatedAt || !pagination.cursor.id) {
+        throw new Error("When cursor pagination is used, date of last item's creation and its id must be present");
     }
 
-    if (cursor.pageSize != null) {
-        params = params.set('cursor.pageSize', cursor.pageSize);
-    }
-
+    params = params.set('pagination.cursor.lastItemCreatedAt', pagination.cursor.lastItemCreatedAt.toISOString());
+    params = params.set('pagination.cursor.id', pagination.cursor.id);
     return params;
 }

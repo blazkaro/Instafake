@@ -4,12 +4,12 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { ApiPaths } from '../../shared/api-config';
 import { catchError, distinctUntilKeyChanged } from 'rxjs';
 import { Post } from '../../shared/post/models/post';
-import { CursorPagination } from '../../shared/pagination/cursor-pagination';
-import { addCursorPaginationParams } from '../../shared/utils/http-params.utils';
+import { CursorPagination, Pagination } from '../../shared/pagination/cursor-pagination';
+import { addPaginationParams } from '../../shared/utils/http-params.utils';
 
 export interface GetPostsResponse {
   posts: Post[];
-  nextCursor: CursorPagination | null;
+  pagination: Pagination;
 }
 
 @Injectable({
@@ -18,7 +18,7 @@ export interface GetPostsResponse {
 export class PostsService {
   private http = inject(HttpClient);
 
-  getPosts(tags: string[] = [], authorId: string | null = null, cursor: CursorPagination | null = null) {
+  getPosts(tags: string[] = [], authorId: string | null = null, pagination: Pagination) {
     let params = new HttpParams();
     if (tags != undefined && tags?.length > 0) {
       for (const tag of tags) {
@@ -30,8 +30,7 @@ export class PostsService {
       params.set('authorId', authorId);
     }
 
-    addCursorPaginationParams(params, cursor);
-
+    params = addPaginationParams(params, pagination);
     return this.http.get<GetPostsResponse>(`api${ApiPaths.Posts}`, {
       withCredentials: true,
       params: params
