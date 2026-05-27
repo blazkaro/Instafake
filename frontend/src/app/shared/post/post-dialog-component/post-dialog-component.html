@@ -4,20 +4,6 @@
             <section tuiSlides class="slides">
                 <img src="{{post.multimediaUrls[multimedia_index]}}">
             </section>
-
-            <div tuiGroup orientation="vertical" class="actions">
-                <button tuiButton appearance="accent" class="action" size="l" (click)="toggleLike()">
-                    <tui-icon [icon]="post.likedByUser ? '@tui.heart-filled' : '@tui.heart'"></tui-icon>
-                    <div>{{post.likesCount | compactNumber}}</div>
-                </button>
-                <button tuiButton appearance="primary" type="button" class="action" size="l">
-                    <tui-icon icon="@tui.messages-square"></tui-icon>
-                    <div>{{post.commentsCount | compactNumber}}</div>
-                </button>
-                <button tuiIconButton appearance="primary-positive" type="button" class="action" size="l">
-                    <tui-icon icon="@tui.link"></tui-icon>
-                </button>
-            </div>
         </section>
     </tui-elastic-container>
 
@@ -33,22 +19,37 @@
         <div class="created-at">
             {{post.createdAt | date: 'medium'}}
         </div>
-        <div class="description">
-            <tui-avatar-labeled label="{{post.author.name}}">
-                <div tuiAvatar size="xs">
-                    <img src="{{post.author.avatarUrl}}">
+        <div class="post-description-actions-wrapper">
+            <div class="description">
+                <tui-avatar-labeled label="{{post.author.name}}">
+                    <div tuiAvatar size="xs">
+                        <img src="{{post.author.avatarUrl}}">
+                    </div>
+                </tui-avatar-labeled>
+                <span>
+                    {{post.description}}
+                </span>
+                <div class="tags">
+                    @for (tag of post.tags; track tag) {
+                    #{{tag}}
+                    }
                 </div>
-            </tui-avatar-labeled>
-
-            <p>
-                {{post.description}}
-            </p>
-        </div>
-
-        <div class="tags">
-            @for (tag of post.tags; track tag) {
-            #{{tag}}
-            }
+            </div>
+            <div class="actions">
+                <div class="actions">
+                    <button tuiButton appearance="action-destructive" class="action" size="xs" (click)="toggleLike()">
+                        <tui-icon [icon]="post.likedByUser ? '@tui.heart-filled' : '@tui.heart'"></tui-icon>
+                        <div>{{post.likesCount | compactNumber}}</div>
+                    </button>
+                    <button tuiButton appearance="action" type="button" class="action" size="xs">
+                        <tui-icon icon="@tui.messages-square"></tui-icon>
+                        <div>{{post.commentsCount | compactNumber}}</div>
+                    </button>
+                    <button tuiIconButton appearance="action-grayscale" type="button" class="action" size="xs">
+                        <tui-icon icon="@tui.link"></tui-icon>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

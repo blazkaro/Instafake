@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="posts">
-        @for (post of posts; track post.id) {
+        @for (post of posts(); track post.id) {
         <app-post-component [post]="post" class="post"></app-post-component>
         }
     </div>

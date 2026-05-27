@@ -17,10 +17,6 @@
     // override taiga ui header
     font-family: "Crafty Girls", cursive !important;
     gap: 8px !important;
-
-    &:hover {
-        animation: shakeAnim 0.5s ease-in-out;
-    }
 }
 
 .author-name {

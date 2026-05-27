@@ -4,5 +4,6 @@ export const apiConfig = {
 }
 
 export enum ApiPaths {
-    Auth = '/auth'
+    Auth = '/auth',
+    Posts = '/posts'
 }

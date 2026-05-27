@@ -5,7 +5,6 @@
 
 .slider {
     height: 100%;
-    position: relative;
 }
 
 .slides {
@@ -17,37 +16,36 @@ img {
     overflow: auto;
 }
 
-.actions {
-    position: absolute;
-    right: 10px;
-    bottom: 10%;
-}
-
 .action {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    width: 60px;
-    height: 60px;
+    gap: 0;
+    width: 40px !important;
+    height: 40px !important;
     font-size: 12px;
 }
 
-[data-appearance="primary-positive"] {
-    background-color: var(--tui-status-positive);
-    color: var(--tui-text-primary);
-
-    &:hover {
-        // a bit brighter than --tui-stataus-positive
-        background-color: #67E6B7;
-    }
+.post-description-actions-wrapper {
+    display: flex;
 }
 
 .description {
+    flex: 1 1 auto;
+    margin-top: 10px;
+    display: block;
+
     tui-avatar-labeled {
         float: left;
     }
+}
+
+.actions {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
 }
 
 [tuiAvatar] {
@@ -55,11 +53,11 @@ img {
 }
 
 .tags {
-    clear: both;
     color: var(--tui-text-secondary);
+    clear: both;
 }
 
-.post-about{
+.post-about {
     margin-top: 10px;
     overflow: auto;
     max-height: 200px;
