@@ -1,6 +1,6 @@
 ﻿using Auth0.AspNetCore.Authentication;
 using Instafake.BFF.Config;
-using Instafake.BFF.Controllers.Dtos;
+using Instafake.BFF.Controllers.Auth.Dtos;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
