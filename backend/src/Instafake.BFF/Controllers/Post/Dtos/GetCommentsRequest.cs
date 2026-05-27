@@ -7,5 +7,5 @@ public class GetCommentsRequest
 {
     [FromRoute]
     public string PostId { get; set; }
-    public CursorPaginationDto? Cursor { get; set; }
+    public PaginationDto? Pagination { get; set; }
 }

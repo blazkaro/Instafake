@@ -2,6 +2,6 @@
 
 namespace Instafake.BFF.Controllers.Post.Dtos;
 
-public record GetPostsResponse(List<PostDto> Posts, CursorPaginationDto NextCursor)
+public record GetPostsResponse(List<PostDto> Posts, PaginationResultDto? Pagination)
 {
 }

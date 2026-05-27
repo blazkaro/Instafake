@@ -28,7 +28,7 @@ message CreatePostReply{
 message GetPostsRequest{
 	repeated string tags = 1;
 	optional string author_id = 2;
-	optional pagination.CursorPagination cursor = 3;
+	optional pagination.PaginationRequest pagination = 3;
 }
 
 message PostDto{
@@ -45,12 +45,12 @@ message PostDto{
 
 message GetPostsReply{
 	repeated PostDto posts = 1;
-	pagination.CursorPagination next_cursor = 2;
+	pagination.PaginationReply pagination = 2;
 }
 
 message GetCommentsRequest{
 	string post_id = 1;
-	optional pagination.CursorPagination cursor = 2;
+	optional pagination.PaginationRequest pagination = 2;
 }
 
 message CommentDto{
@@ -62,7 +62,7 @@ message CommentDto{
 
 message GetCommentsReply{
 	repeated CommentDto comments = 1;
-	pagination.CursorPagination next_cursor = 2;
+	pagination.PaginationReply pagination = 2;
 }
 
 message CreateCommentRequest{

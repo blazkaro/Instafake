@@ -4,5 +4,4 @@ public class CursorPaginationDto
 {
     public DateTime LastItemCreatedAt { get; set; }
     public string Id { get; set; }
-    public int PageSize { get; set; }
 }

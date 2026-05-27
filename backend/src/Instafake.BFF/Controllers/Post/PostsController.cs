@@ -1,4 +1,4 @@
-﻿using Instafake.BFF.Controllers.Post.Dtos;
+using Instafake.BFF.Controllers.Post.Dtos;
 using Instafake.BFF.Extensions;
 using Instafake.BFF.ServicesProtos.Post;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,7 +10,7 @@ namespace Instafake.BFF.Controllers.Post;
 [Route("[controller]")]
 [ApiController]
 [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-public class PostController(Poster.PosterClient client) : ControllerBase
+public class PostsController(Poster.PosterClient client) : ControllerBase
 {
     private readonly Poster.PosterClient _client = client;
 
@@ -28,11 +28,11 @@ public class PostController(Poster.PosterClient client) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPostsAsync(Dtos.GetPostsRequest dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPostsAsync([FromQuery] Dtos.GetPostsRequest dto, CancellationToken cancellationToken)
     {
         var protoRequest = new ServicesProtos.Post.GetPostsRequest
         {
-            Cursor = dto.Cursor.ToProtoCursor()
+            Pagination = dto.Pagination.ToProtoPaginationRequest()
         };
 
         if (!string.IsNullOrEmpty(dto.AuthorId))
@@ -53,7 +53,7 @@ public class PostController(Poster.PosterClient client) : ControllerBase
                 protoPost.LikesCount,
                 protoPost.LikedByUser,
                 protoPost.CommentsCount))],
-            reply.NextCursor.ToCursorPagination()!));
+            reply.Pagination.ToPaginationResultDto()));
     }
 
     [HttpPost("{postId}/comments")]
@@ -69,12 +69,12 @@ public class PostController(Poster.PosterClient client) : ControllerBase
     }
 
     [HttpGet("{postId}/comments")]
-    public async Task<IActionResult> GetCommentsAsync(Dtos.GetCommentsRequest dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetCommentsAsync([FromQuery] Dtos.GetCommentsRequest dto, CancellationToken cancellationToken)
     {
         var reply = await _client.GetCommentsAsync(new ServicesProtos.Post.GetCommentsRequest
         {
             PostId = dto.PostId,
-            Cursor = dto.Cursor.ToProtoCursor()
+            Pagination = dto.Pagination.ToProtoPaginationRequest()
         }, cancellationToken: cancellationToken);
 
         return Ok(new GetCommentsResponse(
@@ -84,6 +84,6 @@ public class PostController(Poster.PosterClient client) : ControllerBase
                 protoComment.Content,
                 protoComment.CreatedAt.ToDateTime()
                 ))],
-            reply.NextCursor.ToCursorPagination()!));
+            reply.Pagination.ToPaginationResultDto()));
     }
 }
