@@ -34,7 +34,7 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
                 Id = comment.Id,
                 Author = new Protos.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
                 Content = comment.Content,
-                CreatedAt = comment.CreatedAt.ToTimestamp()
+                CreatedAt = comment.CreatedAt.AsUtc().ToTimestamp(),
             }) },
             NextCursor = commentsPaginated.NextCursor.ToProtoCursor()
         };
@@ -53,7 +53,12 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
                 Id = post.Id,
                 Author = new Protos.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
                 Description = post.Description,
-                MultimediaUrls = { post.MultimediaUrls }
+                MultimediaUrls = { post.MultimediaUrls },
+                Tags = { post.Tags },
+                CreatedAt = post.CreatedAt.AsUtc().ToTimestamp(),
+                LikesCount = post.LikesCount,
+                LikedByUser = post.LikedByUser,
+                CommentsCount = post.CommentsCount
             }) },
             NextCursor = postsPaginated.NextCursor.ToProtoCursor()
         };

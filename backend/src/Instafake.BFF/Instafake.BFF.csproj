@@ -10,6 +10,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.7.0" />
+		<PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" Version="4.2.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.35.0" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.80.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.80.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.80.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.8" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
@@ -21,6 +29,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Instafake.ServiceDefaults\Instafake.ServiceDefaults.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="ServicesProtos\Post\post.proto" GrpcServices="Client" />
+		<Protobuf Include="ServicesProtos\Shared\pagination.proto" />
+		<Protobuf Include="ServicesProtos\Shared\user.proto" />
 	</ItemGroup>
 
 </Project>

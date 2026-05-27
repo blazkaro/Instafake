@@ -10,7 +10,7 @@ public class Post
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
     public IReadOnlyCollection<string> MultimediaUrls => _multimediaUrls.AsReadOnly();
-    public IReadOnlyCollection<string> Tags => _multimediaUrls.AsReadOnly();
+    public IReadOnlyCollection<string> Tags => _tags.AsReadOnly();
 
     public void AddMultimedia(params string[] urls)
     {

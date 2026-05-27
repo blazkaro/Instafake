@@ -30,7 +30,7 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MultimediaUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -127,6 +127,11 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_CreatedAt",
+                table: "Posts",
+                column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostTag_PostId",

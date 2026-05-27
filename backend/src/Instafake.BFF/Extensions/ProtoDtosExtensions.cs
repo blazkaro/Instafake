@@ -1,12 +1,13 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Instafake.BFF.Controllers.SharedDtos;
 
-namespace Instafake.Posts.Api.Extensions;
+namespace Instafake.BFF.Extensions;
 
 public static class ProtoDtosExtensions
 {
-    extension(Protos.CursorPagination? protoCursor)
+    extension(ServicesProtos.Shared.CursorPagination? protoCursor)
     {
-        public Application.Queries.Pagination.CursorPagination? ToCursorPagination()
+        public CursorPaginationDto? ToCursorPagination()
         {
             return protoCursor is not null ? new()
             {
@@ -17,9 +18,9 @@ public static class ProtoDtosExtensions
         }
     }
 
-    extension(Application.Queries.Pagination.CursorPagination? cursor)
+    extension(CursorPaginationDto? cursor)
     {
-        public Protos.CursorPagination? ToProtoCursor()
+        public ServicesProtos.Shared.CursorPagination? ToProtoCursor()
         {
             return cursor is not null ? new()
             {

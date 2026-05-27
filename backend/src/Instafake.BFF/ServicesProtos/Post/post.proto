@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option csharp_namespace = "Instafake.BFF.ServicesProtos.Post";
+
+package post;
+
+import "ServicesProtos/Shared/pagination.proto";
+import "ServicesProtos/Shared/user.proto";
+import "google/protobuf/timestamp.proto";
+
+service Poster{
+	rpc CreatePost (CreatePostRequest) returns (CreatePostReply);
+	rpc GetPosts (GetPostsRequest) returns (GetPostsReply);
+	rpc GetComments (GetCommentsRequest) returns (GetCommentsReply);
+	rpc CreateComment(CreateCommentRequest) returns (CreateCommentReply);
+}
+
+message CreatePostRequest{
+	string description = 1;
+	repeated string tags = 2;
+	repeated string multimedia_urls = 3;
+}
+
+message CreatePostReply{
+	string id = 1;
+}
+
+message GetPostsRequest{
+	repeated string tags = 1;
+	optional string author_id = 2;
+	optional pagination.CursorPagination cursor = 3;
+}
+
+message PostDto{
+	string id = 1;
+	user.AuthorDto author = 2;
+	string description = 3;
+	repeated string multimedia_urls = 4;
+	repeated string tags = 5;
+	google.protobuf.Timestamp created_at = 6;
+	int32 likes_count = 7;
+	bool liked_by_user = 8;
+	int32 comments_count = 9;
+}
+
+message GetPostsReply{
+	repeated PostDto posts = 1;
+	pagination.CursorPagination next_cursor = 2;
+}
+
+message GetCommentsRequest{
+	string post_id = 1;
+	optional pagination.CursorPagination cursor = 2;
+}
+
+message CommentDto{
+	string id = 1;
+	user.AuthorDto author = 2;
+	string content = 3;
+	google.protobuf.Timestamp created_at = 4;
+}
+
+message GetCommentsReply{
+	repeated CommentDto comments = 1;
+	pagination.CursorPagination next_cursor = 2;
+}
+
+message CreateCommentRequest{
+	string post_id = 1;
+	string content = 2;
+}
+
+message CreateCommentReply{
+	string id = 1;
+}

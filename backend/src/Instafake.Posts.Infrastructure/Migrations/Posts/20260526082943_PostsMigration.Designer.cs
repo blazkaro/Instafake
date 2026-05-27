@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Instafake.Posts.Infrastructure.Migrations.Posts
 {
     [DbContext(typeof(PostsDbContext))]
-    [Migration("20260519213402_PostsMigration")]
+    [Migration("20260526082943_PostsMigration")]
     partial class PostsMigration
     {
         /// <inheritdoc />
@@ -42,13 +42,15 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("ImageUrls")
+                    b.PrimitiveCollection<string>("MultimediaUrls")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("CreatedAt");
 
                     b.ToTable("Posts");
                 });
@@ -153,7 +155,7 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.PostComment", b =>
                 {
                     b.HasOne("Instafake.Posts.Infrastructure.Entities.User", "Author")
-                        .WithMany("AuthoredPostComments")
+                        .WithMany("AuthoredComments")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -204,7 +206,7 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
 
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.User", b =>
                 {
-                    b.Navigation("AuthoredPostComments");
+                    b.Navigation("AuthoredComments");
 
                     b.Navigation("AuthoredPosts");
                 });
