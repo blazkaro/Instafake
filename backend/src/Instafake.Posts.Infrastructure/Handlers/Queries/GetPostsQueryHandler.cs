@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Posts.Infrastructure.Handlers.Queries;
 
-internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, CursorPaginationResult<IReadOnlyList<PostDto>>>
+internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, PaginationResult<IReadOnlyList<PostDto>>>
 {
     private readonly PostsDbContext _dbContext = dbContext;
 
     private const int FALLBACK_PAGE_SIZE = 20;
 
-    public async Task<CursorPaginationResult<IReadOnlyList<PostDto>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginationResult<IReadOnlyList<PostDto>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Posts.AsNoTracking();
 
@@ -23,13 +23,14 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
         if (request.Tags is not null && request.Tags.Length != 0)
             query = query.Where(p => p.Tags.Any(tag => request.Tags.Contains(tag.Tag)));
 
-        if (request.Cursor is not null && Guid.TryParse(request.Cursor.Id, out var cursorId))
-            query = query.Where(p => p.CreatedAt < request.Cursor.LastItemCreatedAt || (p.CreatedAt == request.Cursor.LastItemCreatedAt && p.Id < cursorId));
+        if (request.Pagination?.Cursor is not null && Guid.TryParse(request.Pagination.Cursor.Id, out var cursorId))
+            query = query.Where(p => p.CreatedAt < request.Pagination.Cursor.LastItemCreatedAt || (p.CreatedAt == request.Pagination.Cursor.LastItemCreatedAt && p.Id < cursorId));
 
+        var pageSize = request.Pagination?.PageSize ?? FALLBACK_PAGE_SIZE;
         var posts = await query
             .OrderByDescending(p => p.CreatedAt)
             .ThenByDescending(p => p.Id)
-            .Take(request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE)
+            .Take(pageSize)
             .Select(p => new PostDto
             (
                 p.Id.ToString(),
@@ -48,14 +49,14 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
         var nextCursor = lastPost is not null ? new CursorPagination
         {
             Id = lastPost.Id,
-            LastItemCreatedAt = lastPost.CreatedAt,
-            PageSize = request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE
+            LastItemCreatedAt = lastPost.CreatedAt
         } : null;
 
         return new()
         {
             Result = posts,
-            NextCursor = nextCursor
+            PageSize = Math.Min(pageSize, posts.Count),
+            NextCursor = nextCursor,
         };
     }
 }

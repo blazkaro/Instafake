@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Instafake.Posts.Api.Protos";
+option csharp_namespace = "Instafake.Posts.Api.Protos.Shared";
 
 package user;
 

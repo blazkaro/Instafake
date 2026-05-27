@@ -6,5 +6,5 @@ public class GetPostsRequest
 {
     public string[]? Tags { get; set; }
     public string? AuthorId { get; set; }
-    public CursorPaginationDto? Cursor { get; set; }
+    public PaginationDto? Pagination { get; set; }
 }

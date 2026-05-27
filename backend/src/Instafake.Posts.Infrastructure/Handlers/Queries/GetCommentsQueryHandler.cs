@@ -7,24 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Posts.Infrastructure.Handlers.Queries;
 
-internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetCommentsQuery, CursorPaginationResult<IReadOnlyCollection<CommentDto>>>
+internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetCommentsQuery, PaginationResult<IReadOnlyCollection<CommentDto>>>
 {
     private readonly PostsDbContext _dbContext = dbContext;
 
     const int FALLBACK_PAGE_SIZE = 50;
 
-    public async Task<CursorPaginationResult<IReadOnlyCollection<CommentDto>>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginationResult<IReadOnlyCollection<CommentDto>>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
     {
         var query = _dbContext.Comments.AsNoTracking()
             .Where(p => p.PostId == request.PostId);
 
-        if (request.Cursor is not null && Guid.TryParse(request.Cursor.Id, out var cursorId))
-            query = query.Where(p => p.CreatedAt < request.Cursor.LastItemCreatedAt || (p.CreatedAt == request.Cursor.LastItemCreatedAt && p.Id < cursorId));
+        if (request.Pagination?.Cursor is not null && Guid.TryParse(request.Pagination.Cursor.Id, out var cursorId))
+            query = query.Where(p => p.CreatedAt < request.Pagination.Cursor.LastItemCreatedAt || (p.CreatedAt == request.Pagination.Cursor.LastItemCreatedAt && p.Id < cursorId));
 
+        var pageSize = request.Pagination?.PageSize ?? FALLBACK_PAGE_SIZE;
         var comments = await query
             .OrderByDescending(p => p.CreatedAt)
             .ThenByDescending(p => p.Id)
-            .Take(request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE)
+            .Take(pageSize)
             .Select(p => new CommentDto
             (
                 p.Id.ToString(),
@@ -38,13 +39,13 @@ internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandl
         var nextCursor = lastComment is not null ? new CursorPagination
         {
             Id = lastComment.Id,
-            LastItemCreatedAt = lastComment.CreatedAt,
-            PageSize = request.Cursor?.PageSize ?? FALLBACK_PAGE_SIZE
+            LastItemCreatedAt = lastComment.CreatedAt
         } : null;
 
         return new()
         {
             Result = comments,
+            PageSize = Math.Min(pageSize, comments.Count),
             NextCursor = nextCursor
         };
     }

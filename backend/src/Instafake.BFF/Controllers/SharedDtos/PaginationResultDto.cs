@@ -1,7 +1,7 @@
 ﻿namespace Instafake.BFF.Controllers.SharedDtos;
 
-public class CursorPaginationResultDto<TResult>
+public class PaginationResultDto
 {
-    public TResult Result { get; set; }
+    public int PageSize { get; set; }
     public CursorPaginationDto? NextCursor { get; set; }
 }

@@ -9,5 +9,14 @@ import "google/protobuf/timestamp.proto";
 message CursorPagination{
 	google.protobuf.Timestamp last_item_created_at = 1;
 	string id = 2;
-	int32 page_size = 3;
+}
+
+message PaginationRequest{
+	int32 page_size = 1;
+	optional CursorPagination cursor = 2;
+}
+
+message PaginationReply{
+	int32 page_size = 1;
+	optional CursorPagination next_cursor = 2;
 }

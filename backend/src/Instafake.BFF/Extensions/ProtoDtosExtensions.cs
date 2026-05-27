@@ -12,21 +12,56 @@ public static class ProtoDtosExtensions
             return protoCursor is not null ? new()
             {
                 Id = protoCursor.Id,
-                LastItemCreatedAt = protoCursor.LastItemCreatedAt.ToDateTime(),
-                PageSize = protoCursor.PageSize
+                LastItemCreatedAt = protoCursor.LastItemCreatedAt.ToDateTime()
             } : null;
         }
     }
 
+
     extension(CursorPaginationDto? cursor)
     {
-        public ServicesProtos.Shared.CursorPagination? ToProtoCursor()
+        public ServicesProtos.Shared.CursorPagination? ToProtoCursorPagination()
         {
             return cursor is not null ? new()
             {
                 Id = cursor.Id,
-                LastItemCreatedAt = cursor.LastItemCreatedAt.AsUtc().ToTimestamp(),
-                PageSize = cursor.PageSize
+                LastItemCreatedAt = cursor.LastItemCreatedAt.AsUtc().ToTimestamp()
+            } : null;
+        }
+    }
+
+    extension(ServicesProtos.Shared.PaginationRequest? paginationRequest)
+    {
+        public PaginationDto? ToPaginationDto()
+        {
+            return paginationRequest is not null ? new()
+            {
+                PageSize = paginationRequest.PageSize,
+                Cursor = paginationRequest.Cursor.ToCursorPagination()
+            } : null;
+        }
+    }
+
+    extension(ServicesProtos.Shared.PaginationReply? paginationReply)
+    {
+        public PaginationResultDto? ToPaginationResultDto()
+        {
+            return paginationReply is not null ? new()
+            {
+                PageSize = paginationReply.PageSize,
+                NextCursor = paginationReply.NextCursor.ToCursorPagination()
+            } : null;
+        }
+    }
+
+    extension(PaginationDto? paginationDto)
+    {
+        public ServicesProtos.Shared.PaginationRequest? ToProtoPaginationRequest()
+        {
+            return paginationDto is not null ? new()
+            {
+                PageSize = paginationDto.PageSize,
+                Cursor = paginationDto.Cursor.ToProtoCursorPagination()
             } : null;
         }
     }

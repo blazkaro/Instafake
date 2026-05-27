@@ -4,6 +4,7 @@ using Instafake.Posts.Api.Extensions;
 using Instafake.Posts.Api.Protos;
 using Instafake.Posts.Application.Commands;
 using Instafake.Posts.Application.Queries;
+using Instafake.Posts.Application.Queries.Dtos;
 using MediatR;
 
 namespace Instafake.Posts.Api.Services;
@@ -26,17 +27,17 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
             return new GetCommentsReply(); // empty response, invalid post id
         }
 
-        var commentsPaginated = await _mediator.Send(new GetCommentsQuery(postId, request.Cursor.ToCursorPagination()), context.CancellationToken);
+        var commentsPaginated = await _mediator.Send(new GetCommentsQuery(postId, request.Pagination.ToPaginationDto()), context.CancellationToken);
         var reply = new GetCommentsReply()
         {
             Comments = { commentsPaginated.Result.Select(comment => new Protos.CommentDto
             {
                 Id = comment.Id,
-                Author = new Protos.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
+                Author = new Protos.Shared.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
                 Content = comment.Content,
-                CreatedAt = comment.CreatedAt.AsUtc().ToTimestamp(),
+                CreatedAt = comment.CreatedAt.AsUtc().ToTimestamp()
             }) },
-            NextCursor = commentsPaginated.NextCursor.ToProtoCursor()
+            Pagination = new PaginationDto { PageSize = commentsPaginated.PageSize, Cursor = commentsPaginated.NextCursor }.ToProtoPaginationReply()
         };
 
         return reply;
@@ -45,13 +46,13 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
         var userId = context.GetAccessTokenSubject()!;
-        var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorId, [.. request.Tags], request.Cursor.ToCursorPagination()), context.CancellationToken);
+        var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorId, [.. request.Tags], request.Pagination.ToPaginationDto()), context.CancellationToken);
         var reply = new GetPostsReply()
         {
             Posts = { postsPaginated.Result.Select(post => new Protos.PostDto
             {
                 Id = post.Id,
-                Author = new Protos.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
+                Author = new Protos.Shared.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
                 Description = post.Description,
                 MultimediaUrls = { post.MultimediaUrls },
                 Tags = { post.Tags },
@@ -60,7 +61,7 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
                 LikedByUser = post.LikedByUser,
                 CommentsCount = post.CommentsCount
             }) },
-            NextCursor = postsPaginated.NextCursor.ToProtoCursor()
+            Pagination = new PaginationDto { PageSize = postsPaginated.PageSize, Cursor = postsPaginated.NextCursor }.ToProtoPaginationReply()
         };
 
         return reply;
