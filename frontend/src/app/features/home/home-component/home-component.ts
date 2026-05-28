@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, Signal, signal } from '@angular/core';
-import { TuiIcon, TuiInput } from '@taiga-ui/core';
+import { TuiIcon, TuiInput, TuiLoader } from '@taiga-ui/core';
 import { UserService } from '../../../core/services/user-service';
 import { TuiAvatar, TuiAvatarOutline } from '@taiga-ui/kit';
 import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
@@ -11,7 +11,7 @@ import { CursorPagination, Pagination } from '../../../shared/pagination/cursor-
 
 @Component({
   selector: 'app-home-component',
-  imports: [TuiInput, TuiAvatar, TuiAvatarOutline, PostOverviewComponent],
+  imports: [TuiInput, TuiAvatar, TuiAvatarOutline, PostOverviewComponent, TuiLoader],
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss',
 })

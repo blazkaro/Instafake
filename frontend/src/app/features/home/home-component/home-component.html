@@ -15,8 +15,13 @@
         </div>
     </div>
     <div class="posts">
+        @if(!postsResource.isLoading()){
         @for (post of posts(); track post.id) {
         <app-post-component [post]="post" class="post"></app-post-component>
+        }}
+        @else {
+        <tui-loader></tui-loader>
         }
     </div>
 </div>
+\\
