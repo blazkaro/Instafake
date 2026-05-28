@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Instafake.Posts.Infrastructure.Migrations.Posts
 {
     [DbContext(typeof(PostsDbContext))]
-    [Migration("20260526082943_PostsMigration")]
+    [Migration("20260528162514_PostsMigration")]
     partial class PostsMigration
     {
         /// <inheritdoc />
@@ -119,9 +119,12 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

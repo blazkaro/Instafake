@@ -35,8 +35,8 @@ public class PostsController(Poster.PosterClient client) : ControllerBase
             Pagination = dto.Pagination.ToProtoPaginationRequest()
         };
 
-        if (!string.IsNullOrEmpty(dto.AuthorId))
-            protoRequest.AuthorId = dto.AuthorId;
+        if (!string.IsNullOrEmpty(dto.AuthorName))
+            protoRequest.AuthorName = dto.AuthorName;
 
         if (dto.Tags?.Length > 0)
             protoRequest.Tags.AddRange(dto.Tags);

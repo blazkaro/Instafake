@@ -46,7 +46,7 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
         var userId = context.GetAccessTokenSubject()!;
-        var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorId, [.. request.Tags], request.Pagination.ToPaginationDto()), context.CancellationToken);
+        var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()), context.CancellationToken);
         var reply = new GetPostsReply()
         {
             Posts = { postsPaginated.Result.Select(post => new Protos.PostDto

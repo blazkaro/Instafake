@@ -12,9 +12,6 @@ internal class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasKey(post => post.Id);
 
         builder
-            .HasIndex(post => post.AuthorId);
-
-        builder
             .HasIndex(post => post.CreatedAt);
 
         builder
