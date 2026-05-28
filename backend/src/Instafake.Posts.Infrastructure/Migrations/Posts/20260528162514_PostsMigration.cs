@@ -16,7 +16,7 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -147,6 +147,12 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 name: "IX_PostUser_LikedPostsId",
                 table: "PostUser",
                 column: "LikedPostsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Name",
+                table: "Users",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />

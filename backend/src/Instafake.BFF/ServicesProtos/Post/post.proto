@@ -27,7 +27,7 @@ message CreatePostReply{
 
 message GetPostsRequest{
 	repeated string tags = 1;
-	optional string author_id = 2;
+	optional string author_name = 2;
 	optional pagination.PaginationRequest pagination = 3;
 }
 

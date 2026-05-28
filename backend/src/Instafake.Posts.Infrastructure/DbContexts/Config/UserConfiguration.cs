@@ -12,6 +12,10 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             HasKey(user => user.Id);
 
         builder
+            .HasIndex(user => user.Name)
+            .IsUnique();
+
+        builder
             .HasMany(user => user.AuthoredPosts)
             .WithOne(post => post.Author);
 
