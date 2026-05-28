@@ -1,15 +1,15 @@
-import { Component, effect, inject, OnInit, Signal, signal } from '@angular/core';
-import { TuiIcon, TuiInput, TuiLoader, TuiTextfieldMultiComponent, TuiHintOverflow, TuiScrollbar, TuiScrollbarDirective } from '@taiga-ui/core';
-import { UserService } from '../../../core/services/user-service';
-import { TuiAvatar, TuiAvatarOutline, TuiChevron, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
-import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
-import { Post } from '../../../shared/post/models/post';
-import { PostsService } from '../posts-service';
+import { Component, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { distinctUntilKeyChanged, map } from 'rxjs';
-import { CursorPagination, Pagination } from '../../../shared/pagination/cursor-pagination';
-import { TuiItem } from "@taiga-ui/cdk/directives/item";
 import { FormsModule } from '@angular/forms';
+import { TuiItem } from "@taiga-ui/cdk/directives/item";
+import { TuiInput, TuiLoader, TuiTextfieldMultiComponent } from '@taiga-ui/core';
+import { TuiAvatar, TuiAvatarOutline, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
+import { map } from 'rxjs';
+import { UserService } from '../../../core/services/user-service';
+import { CursorPagination } from '../../../shared/pagination/cursor-pagination';
+import { Post } from '../../../shared/post/models/post';
+import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
+import { PostsService } from '../posts-service';
 
 @Component({
   selector: 'app-home-component',

@@ -1,11 +1,11 @@
-import { Component, inject, Input } from '@angular/core';
-import { TuiAppBarComponent, TuiAppBarSizeDirective, TuiSlides, TuiCardLarge, TuiElasticContainer, TuiAppBarDirective } from "@taiga-ui/layout";
-import { TuiLike, TuiProgressBar, TuiBadgedContentComponent, TuiBadgeNotification, TuiBadge, TuiButtonCopy, TuiAccordionDirective, TuiAvatarLabeled, TuiAvatar, TuiLineClamp, TuiFade } from "@taiga-ui/kit";
-import { Post } from '../models/post';
-import { TuiDialogContext, TuiGroup, TuiAppearance, TuiButton, TuiIcon, TuiNotificationDirective, TuiLink } from '@taiga-ui/core';
+import { DatePipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { TuiAppearance, TuiButton, TuiDialogContext, TuiGroup, TuiIcon } from '@taiga-ui/core';
+import { TuiAvatar, TuiAvatarLabeled } from "@taiga-ui/kit";
+import { TuiElasticContainer, TuiSlides } from "@taiga-ui/layout";
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
-import { DatePipe } from '@angular/common';
+import { Post } from '../models/post';
 
 @Component({
   selector: 'app-post-component',

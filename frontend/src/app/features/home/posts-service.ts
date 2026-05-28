@@ -1,10 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { ApiPaths } from '../../shared/api-config';
-import { catchError, distinctUntilKeyChanged } from 'rxjs';
+import { Pagination } from '../../shared/pagination/cursor-pagination';
 import { Post } from '../../shared/post/models/post';
-import { CursorPagination, Pagination } from '../../shared/pagination/cursor-pagination';
 import { addPaginationParams } from '../../shared/utils/http-params.utils';
 
 export interface GetPostsResponse {

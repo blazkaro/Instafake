@@ -1,10 +1,9 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { TuiCardLarge, TuiHeader, TuiCardMedium } from '@taiga-ui/layout';
-import { TuiIcon, TuiTitle, TuiAppearance, TuiNotificationService, TuiDialogService } from "@taiga-ui/core";
-import { Post } from './models/post';
+import { Component, inject, Input } from '@angular/core';
+import { TuiAppearance, TuiDialogService, TuiTitle } from "@taiga-ui/core";
 import { TuiAvatar, TuiBadge } from '@taiga-ui/kit';
+import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { switchMap } from 'rxjs';
+import { Post } from './models/post';
 import { PostDialogComponent } from './post-dialog-component/post-dialog-component';
 
 @Component({

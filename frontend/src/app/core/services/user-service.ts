@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, resource, ResourceRef } from '@angular/core';
-import { ApiPaths } from '../../shared/api-config';
-import { AuthStatus } from './results/auth-result';
-import { BehaviorSubject, catchError, distinctUntilKeyChanged, Observable, of, tap, throwError } from 'rxjs';
-import { User } from '../models/user';
+import { inject, Injectable } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { catchError, distinctUntilKeyChanged, Observable, of, throwError } from 'rxjs';
+import { ApiPaths } from '../../shared/api-config';
+import { User } from '../models/user';
+import { AuthStatus } from './results/auth-result';
 
 @Injectable({
   providedIn: 'root',

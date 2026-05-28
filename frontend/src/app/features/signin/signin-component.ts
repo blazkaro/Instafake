@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { TuiHint, TuiIcon, TuiButton } from '@taiga-ui/core';
+import { Component } from '@angular/core';
+import { TuiButton, TuiHint, TuiIcon } from '@taiga-ui/core';
 import { apiConfig, ApiPaths } from '../../shared/api-config';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin-component',
