@@ -71,16 +71,15 @@ export class HomeComponent {
     const validTags = newValue.filter((item) => item.startsWith('#') && item.length > 1);
 
     const newestUsername = validUsernames.at(-1);
-    console.log(newestUsername);
     this.searchInput = newestUsername ? [newestUsername, ...validTags] : validTags;
 
     if (newestUsername) {
-      console.log(newestUsername);
       this.userName.set(newestUsername.substring(1));
     }
 
     const validTagsSet = new Set(validTags);
-    if (this.tags().length != validTagsSet.size || !this.tags().every((tag) => validTagsSet.has(tag)))
+    if (this.tags().length != validTagsSet.size || !this.tags().every((tag) => validTagsSet.has(tag))) {
       this.tags.set(validTags.map((val) => val.substring(1)));
+    }
   }
 }
