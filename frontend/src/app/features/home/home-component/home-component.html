@@ -4,8 +4,11 @@
             Instafake
         </div>
         <div class="search-bar">
-            <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m">
-                <input type="text" tuiInput placeholder="Search by @username or #tag">
+            <!-- for some reason, [rows]="1" doesnt work but anything > 1 does. The lesser the value the lesser additional height when adding scrollbar-->
+            <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m" multi [rows]="1.00001">
+                <input placeholder="Search by @username and/or #tags" tuiInputChip [(ngModel)]="searchInput"
+                    [unique]="true" [separator]="' '" (ngModelChange)="onSearchInputChange($event)">
+                <tui-input-chip *tuiItem></tui-input-chip>
             </tui-textfield>
         </div>
         <div class="my-profile">
@@ -24,4 +27,3 @@
         }
     </div>
 </div>
-\\

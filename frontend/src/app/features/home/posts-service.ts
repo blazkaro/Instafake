@@ -18,7 +18,7 @@ export interface GetPostsResponse {
 export class PostsService {
   private http = inject(HttpClient);
 
-  getPosts(tags: string[] = [], authorId: string | null = null, pagination: Pagination) {
+  getPosts(tags: string[] = [], authorName: string | null = null, pagination: Pagination) {
     let params = new HttpParams();
     if (tags != undefined && tags?.length > 0) {
       for (const tag of tags) {
@@ -26,8 +26,8 @@ export class PostsService {
       }
     }
 
-    if (authorId != undefined) {
-      params.set('authorId', authorId);
+    if (authorName != undefined) {
+      params = params.set('authorName', authorName);
     }
 
     params = addPaginationParams(params, pagination);
