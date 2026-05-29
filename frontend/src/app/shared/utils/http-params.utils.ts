@@ -1,9 +1,9 @@
 import { HttpParams } from '@angular/common/http';
-import { CursorPagination, Pagination } from '../pagination/cursor-pagination';
+import { PaginationRequest } from '../pagination/cursor-pagination';
 
 export function addPaginationParams(
     params: HttpParams,
-    pagination?: Pagination | null
+    pagination?: PaginationRequest | null
 ): HttpParams {
     if (pagination == null || pagination == undefined) return params;
 

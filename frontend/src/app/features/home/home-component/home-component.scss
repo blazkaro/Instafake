@@ -45,19 +45,22 @@
     justify-content: center;
 }
 
-.posts {
-    box-sizing: border-box;
+.posts-container {
     padding: 50px;
     width: 100%;
     height: calc(100% - 60px);
+    box-sizing: border-box;
     overflow: auto;
+}
+
+.posts {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 20px 0;
 }
 
-.post{
+.post {
     display: block;
     width: 300px;
     aspect-ratio: 9/16;
@@ -69,12 +72,12 @@
     animation: shakeAnim 0.5s ease-in-out;
 }
 
-@media(max-width: 500px){
-    .logo{
+@media(max-width: 500px) {
+    .logo {
         display: none;
     }
 
-    .post{
+    .post {
         width: 100%;
     }
 }

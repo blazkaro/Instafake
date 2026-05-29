@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TuiItem } from "@taiga-ui/cdk/directives/item";
@@ -17,8 +17,8 @@ import { PostsService } from '../posts-service';
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss',
 })
-export class HomeComponent {
-  private readonly PAGE_SIZE: number = 20;
+export class HomeComponent implements OnInit {
+  private readonly PAGE_SIZE: number = 2;
 
   userService = inject(UserService)
   postsService = inject(PostsService);
@@ -43,13 +43,17 @@ export class HomeComponent {
     )
   });
 
+  private sentinel = viewChild<ElementRef<HTMLElement>>('sentinel');
+  private destroyRef = inject(DestroyRef);
+  private observer!: IntersectionObserver;
+
   constructor() {
     effect(() => {
       const resourceState = this.postsResource.value();
       if (!resourceState) return;
 
       const { response, params } = resourceState;
-      this.nextCursor = response.pagination.cursor;
+      this.nextCursor = response.pagination.nextCursor;
 
       if (params.cursor === null) {
         // Tags or username changed (or initial load) -> Clear and set fresh posts
@@ -59,6 +63,25 @@ export class HomeComponent {
         this.posts.update((current) => [...current, ...response.posts]);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !this.postsResource.isLoading() && this.nextCursor?.lastItemCreatedAt) {
+        this.loadMorePosts();
+      }
+    }, {
+      root: null, // uses viewport,
+      rootMargin: '100px', // trigger 100px before user reaches end,
+      threshold: 0.1
+    });
+
+    const element = this.sentinel()?.nativeElement;
+    if (element) {
+      this.observer.observe(element);
+    }
+
+    this.destroyRef.onDestroy(() => this.observer.disconnect());
   }
 
   loadMorePosts() {
@@ -72,6 +95,10 @@ export class HomeComponent {
 
     const newestUsername = validUsernames.at(-1);
     this.searchInput = newestUsername ? [newestUsername, ...validTags] : validTags;
+
+    // clear cursors (search filters changed)
+    this.nextCursor = null;
+    this.cursor.set(null);
 
     if (newestUsername) {
       this.userName.set(newestUsername.substring(1));
