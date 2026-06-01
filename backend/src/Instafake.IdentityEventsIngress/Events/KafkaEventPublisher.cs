@@ -10,7 +10,7 @@ public class KafkaEventPublisher<TEvent>(IProducer<string, string> producer, Ret
     private const string TOPIC = "users";
 
     private readonly IProducer<string, string> _producer = producer;
-    private readonly RetryQueue<TEvent> _retryQueue;
+    private readonly RetryQueue<TEvent> _retryQueue = retryQueue;
 
     public async Task PublishAsync(TEvent ev, CancellationToken cancellationToken = default)
     {
