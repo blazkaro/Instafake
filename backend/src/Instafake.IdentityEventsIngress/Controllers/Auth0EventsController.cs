@@ -17,8 +17,8 @@ public class Auth0EventsController(IEventPublisher<UserCreatedEvent> userCreated
     {
         var identityEvent = new UserCreatedEvent
         {
-            Id = ev.Id,
-            Type = IdentityEvents.UserCreated,
+            EventId = ev.Id,
+            EventType = IdentityEvents.UserCreated,
             UserId = ev.Data.Object.UserId,
             UserName = ev.Data.Object.Nickname,
             AvatarUrl = ev.Data.Object.Picture,
