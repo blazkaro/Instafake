@@ -1,4 +1,5 @@
 using Instafake.Posts.Api.Services;
+using Instafake.Posts.Api.Workers;
 using Instafake.Posts.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -17,6 +18,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddGrpc();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHostedService<AuthorEventsWorker>();
 
 var app = builder.Build();
 

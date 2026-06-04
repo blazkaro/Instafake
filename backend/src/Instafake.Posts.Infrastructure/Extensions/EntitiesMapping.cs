@@ -36,4 +36,17 @@ internal static class EntitiesMapping
             };
         }
     }
+
+    extension(Domain.Entities.Author author)
+    {
+        public Infrastructure.Entities.User ToEntity()
+        {
+            return new()
+            {
+                Id = author.Id,
+                Name = author.Name,
+                AvatarUrl = author.AvatarUrl
+            };
+        }
+    }
 }
