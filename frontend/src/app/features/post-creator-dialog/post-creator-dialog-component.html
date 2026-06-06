@@ -1,0 +1,45 @@
+<div class="container">
+    <label tuiInputFiles>
+        <input tuiInputFiles [multiple]="true" [(ngModel)]="files">
+        <ng-template let-dragged>
+            @if (dragged) {
+            <div appearance="secondary" size="l" tuiAvatar="@tui.droplet"></div>
+            <div>
+                Drop here...
+                <br />
+                <br />
+            </div>
+            } @else {
+            <div appearance="secondary" size="l" tuiAvatar="@tui.cloud-upload"></div>
+            <div>
+                Drag and drop file here or
+                <a tuiLink>click to upload</a>
+            </div>
+            <div class="types">PNG, JPG, MP4 etc.</div>
+            }
+        </ng-template>
+    </label>
+
+    <tui-textfield iconStart="@tui.message-square-text" tuiTextfieldSize="l">
+        <textarea tuiTextarea placeholder="Romanticized story">
+
+        </textarea>
+    </tui-textfield>
+
+    <tui-textfield iconStart="@tui.tags" tuiTextfieldSize="l" multi [rows]="3">
+        <input placeholder="Excessive #tags" tuiInputChip [ngModel]="tags()" [unique]="true" [separator]="' '"
+            (ngModelChange)="onTagsChange($event)" />
+        <tui-input-chip *tuiItem></tui-input-chip>
+    </tui-textfield>
+
+    <tui-files>
+        @for (file of files(); track file.name) {
+        <tui-file [file]="file" [size]="'m'" />
+        }
+    </tui-files>
+
+    <div class="actions" tuiGroup>
+        <button tuiButton appearance="secondary" type="button" size="m" (click)="onCancel()">Cancel</button>
+        <button tuiButton appearance="primary" type="button" size="m" (click)="onCreate()">Post</button>
+    </div>
+</div>

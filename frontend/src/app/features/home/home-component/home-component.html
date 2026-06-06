@@ -11,9 +11,9 @@
                 <tui-input-chip *tuiItem></tui-input-chip>
             </tui-textfield>
         </div>
-        <div class="my-profile">
+        <div class="my-profile" tuiDropdownHover [tuiDropdown]="dropdown">
             <div class="avatar" size="l" tuiAvatar tuiAvatarOutline="var(--tui-background-accent-2)">
-                <img src="{{userService.user()?.avatarUrl}}" alt="{{userService.user()?.name}}">
+                <img src="{{userService.user()?.avatarUrl}}" alt="{{userService.user()?.userName}}">
             </div>
         </div>
     </div>
@@ -31,3 +31,11 @@
         }
     </div>
 </div>
+
+<ng-template #dropdown>
+    <div tuiGroup>
+        <button tuiIconButton iconStart="@tui.image-plus" size="s" appearance="secondary-grayscale" (click)="openPostCreator();"></button>
+        <button tuiIconButton iconStart="@tui.settings" size="s" appearance="secondary-grayscale"></button>
+        <button tuiIconButton iconStart="@tui.log-out" size="s" appearance="secondary-grayscale"></button>
+    </div>
+</ng-template>

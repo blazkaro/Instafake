@@ -2,7 +2,7 @@ import { Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, view
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TuiItem } from "@taiga-ui/cdk/directives/item";
-import { TuiInput, TuiLoader, TuiTextfieldMultiComponent } from '@taiga-ui/core';
+import { TuiInput, TuiLoader, TuiTextfieldMultiComponent, TuiDropdownHover, TuiDropdownDirective, TuiDataListComponent, TuiButton, TuiGroup, TuiDialogService } from '@taiga-ui/core';
 import { TuiAvatar, TuiAvatarOutline, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
 import { map } from 'rxjs';
 import { UserService } from '../../../core/services/user-service';
@@ -10,10 +10,13 @@ import { CursorPagination } from '../../../shared/pagination/cursor-pagination';
 import { Post } from '../../../shared/post/models/post';
 import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
 import { PostsService } from '../posts-service';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { PostCreatorDialogComponent } from '../../post-creator-dialog/post-creator-dialog-component';
 
 @Component({
   selector: 'app-home-component',
-  imports: [TuiInput, TuiAvatar, TuiAvatarOutline, PostOverviewComponent, TuiLoader, TuiTextfieldMultiComponent, TuiChip, TuiInputChipComponent, TuiItem, FormsModule, TuiInputChipDirective],
+  imports: [TuiInput, TuiAvatar, TuiAvatarOutline, PostOverviewComponent, TuiLoader, TuiTextfieldMultiComponent, TuiChip, TuiInputChipComponent, TuiItem, FormsModule, TuiInputChipDirective, TuiDropdownHover,
+    TuiDropdownDirective, TuiDataListComponent, TuiButton, TuiGroup],
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss',
 })
@@ -22,6 +25,7 @@ export class HomeComponent implements OnInit {
 
   userService = inject(UserService)
   postsService = inject(PostsService);
+  dialogs = inject(TuiDialogService);
 
   protected searchInput: string[] = [];
 
@@ -108,5 +112,11 @@ export class HomeComponent implements OnInit {
     if (this.tags().length != validTagsSet.size || !this.tags().every((tag) => validTagsSet.has(tag))) {
       this.tags.set(validTags.map((val) => val.substring(1)));
     }
+  }
+
+  openPostCreator() {
+    this.dialogs.open(new PolymorpheusComponent(PostCreatorDialogComponent), {
+      size: 'l'
+    }).subscribe();
   }
 }
