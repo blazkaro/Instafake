@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Instafake.BFF\Instafake.BFF.csproj" />
     <ProjectReference Include="..\Instafake.IdentityEventsIngress\Instafake.IdentityEventsIngress.csproj" />
+    <ProjectReference Include="..\Instafake.Multimedia\Instafake.Multimedia.csproj" />
     <ProjectReference Include="..\Instafake.Posts.Api\Instafake.Posts.Api.csproj" />
   </ItemGroup>
 
