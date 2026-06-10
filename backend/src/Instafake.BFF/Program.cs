@@ -7,6 +7,8 @@ using Instafake.BFF.ServicesProtos.Post;
 using Instafake.ServiceDefaults;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Net.Http.Headers;
+using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -61,6 +63,20 @@ builder.AddServiceDefaults();
 services.AddExceptionHandler<GrpcExceptionHandler>();
 services.AddProblemDetails();
 
+services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetRequiredSection("ReverseProxy"))
+    .AddTransforms(builder =>
+    {
+        builder.AddRequestTransform(async (ctx) =>
+        {
+            var userToken = await ctx.HttpContext.GetUserAccessTokenAsync(ct: ctx.CancellationToken);
+            if (!userToken.Succeeded)
+                return;
+
+            ctx.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", userToken.Token.AccessToken);
+        });
+    });
+
 var app = builder.Build();
 
 app.UseCors();
@@ -70,5 +86,7 @@ app.UseAuthorization();
 
 app.UseExceptionHandler();
 app.MapControllers();
+
+app.MapReverseProxy();
 
 await app.RunAsync();
