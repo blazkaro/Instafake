@@ -1,14 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map } from 'rxjs';
-import { ApiPaths } from '../../shared/api-config';
-import { PaginationRequest, PaginationResponse } from '../../shared/pagination/cursor-pagination';
-import { Post } from '../../shared/post/models/post';
-import { addPaginationParams } from '../../shared/utils/http-params.utils';
+import { map, Observable } from 'rxjs';
+import { ApiPaths } from '../../api-config';
+import { PaginationRequest, PaginationResponse } from '../../pagination/cursor-pagination';
+import { Post } from '../models/post';
+import { addPaginationParams } from '../../utils/http-params.utils';
 
 export interface GetPostsResponse {
   posts: Post[];
   pagination: PaginationResponse;
+}
+
+export interface CreatePostResponse {
+  id: string;
 }
 
 @Injectable({
@@ -17,7 +21,7 @@ export interface GetPostsResponse {
 export class PostsService {
   private http = inject(HttpClient);
 
-  getPosts(tags: string[] = [], authorName: string | null = null, pagination: PaginationRequest) {
+  getPosts(tags: string[] = [], authorName: string | null = null, pagination: PaginationRequest): Observable<GetPostsResponse> {
     let params = new HttpParams();
     if (tags != undefined && tags?.length > 0) {
       for (const tag of tags) {
@@ -43,5 +47,16 @@ export class PostsService {
         return response;
       })
     );
+  }
+
+  /**
+  * @returns Observable with post id
+  */
+  createPost(multimediaUrls: URL[], description: string, tags: string[]): Observable<CreatePostResponse> {
+    return this.http.post<CreatePostResponse>(`api${ApiPaths.Posts}`, {
+      multimediaUrls: multimediaUrls.map(val => val.href),
+      description: description,
+      tags: tags
+    }, { withCredentials: true });
   }
 }

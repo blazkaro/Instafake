@@ -2,26 +2,26 @@ import { Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, view
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TuiItem } from "@taiga-ui/cdk/directives/item";
-import { TuiInput, TuiLoader, TuiTextfieldMultiComponent, TuiDropdownHover, TuiDropdownDirective, TuiDataListComponent, TuiButton, TuiGroup, TuiDialogService } from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiDropdownDirective, TuiDropdownHover, TuiGroup, TuiInput, TuiLoader, TuiTextfieldMultiComponent } from '@taiga-ui/core';
 import { TuiAvatar, TuiAvatarOutline, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { map } from 'rxjs';
 import { UserService } from '../../../core/services/user-service';
 import { CursorPagination } from '../../../shared/pagination/cursor-pagination';
 import { Post } from '../../../shared/post/models/post';
 import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
-import { PostsService } from '../posts-service';
-import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { PostsService } from '../../../shared/post/services/posts-service';
 import { PostCreatorDialogComponent } from '../../post-creator-dialog/post-creator-dialog-component';
 
 @Component({
   selector: 'app-home-component',
   imports: [TuiInput, TuiAvatar, TuiAvatarOutline, PostOverviewComponent, TuiLoader, TuiTextfieldMultiComponent, TuiChip, TuiInputChipComponent, TuiItem, FormsModule, TuiInputChipDirective, TuiDropdownHover,
-    TuiDropdownDirective, TuiDataListComponent, TuiButton, TuiGroup],
+    TuiDropdownDirective, TuiButton, TuiGroup],
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss',
 })
 export class HomeComponent implements OnInit {
-  private readonly PAGE_SIZE: number = 2;
+  private readonly PAGE_SIZE: number = 20;
 
   userService = inject(UserService)
   postsService = inject(PostsService);

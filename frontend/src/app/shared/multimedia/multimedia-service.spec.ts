@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PostCreationService } from './post-creation-service';
+import { MultimediaService } from './multimedia-service';
 
-describe('PostCreationService', () => {
-  let service: PostCreationService;
+describe('MultimediaService', () => {
+  let service: MultimediaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PostCreationService);
+    service = TestBed.inject(MultimediaService);
   });
 
   it('should be created', () => {

@@ -21,7 +21,7 @@
     </label>
 
     <tui-textfield iconStart="@tui.message-square-text" tuiTextfieldSize="l">
-        <textarea tuiTextarea placeholder="Romanticized story">
+        <textarea tuiTextarea placeholder="Romanticized story" [(ngModel)]="description">
 
         </textarea>
     </tui-textfield>
@@ -40,6 +40,7 @@
 
     <div class="actions" tuiGroup>
         <button tuiButton appearance="secondary" type="button" size="m" (click)="onCancel()">Cancel</button>
-        <button tuiButton appearance="primary" type="button" size="m" (click)="onCreate()">Post</button>
+        <button tuiButton appearance="primary" type="button" size="m" (click)="onCreate()" [loading]="processing()"
+            [disabled]="processing()">Post</button>
     </div>
 </div>
