@@ -7,7 +7,7 @@ import { PostsService } from '../../../shared/post/services/posts-service';
 
 @Injectable()
 export class PostListService {
-  private readonly PAGE_SIZE: number = 2;
+  private readonly PAGE_SIZE: number = 20;
 
   private postsService = inject(PostsService);
 
