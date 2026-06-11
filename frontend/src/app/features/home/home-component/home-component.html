@@ -19,14 +19,14 @@
     </div>
     <div class="posts-container">
         <div class="posts">
-            @for (post of posts(); track post.id) {
+            @for (post of postListService.posts(); track post.id) {
             <app-post-component [post]="post" class="post"></app-post-component>
             }
         </div>
 
         <div #sentinel class="sentinel"></div>
 
-        @if(postsResource.isLoading()){
+        @if(postListService.isLoading()){
         <tui-loader></tui-loader>
         }
     </div>
@@ -34,7 +34,8 @@
 
 <ng-template #dropdown>
     <div tuiGroup>
-        <button tuiIconButton iconStart="@tui.image-plus" size="s" appearance="secondary-grayscale" (click)="openPostCreator();"></button>
+        <button tuiIconButton iconStart="@tui.image-plus" size="s" appearance="secondary-grayscale"
+            (click)="openPostCreator();"></button>
         <button tuiIconButton iconStart="@tui.settings" size="s" appearance="secondary-grayscale"></button>
         <button tuiIconButton iconStart="@tui.log-out" size="s" appearance="secondary-grayscale"></button>
     </div>
