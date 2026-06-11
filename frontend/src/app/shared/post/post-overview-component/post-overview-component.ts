@@ -3,8 +3,8 @@ import { TuiAppearance, TuiDialogService, TuiTitle } from "@taiga-ui/core";
 import { TuiAvatar, TuiBadge } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { Post } from './models/post';
-import { PostDialogComponent } from './post-dialog-component/post-dialog-component';
+import { Post } from '../models/post';
+import { PostDialogComponent } from '../post-dialog-component/post-dialog-component';
 
 @Component({
   selector: 'app-post-component',
@@ -20,8 +20,8 @@ export class PostOverviewComponent {
 
   openPost() {
     this.dialogs.open(new PolymorpheusComponent(PostDialogComponent), {
-      size: 'l',
-      data: this.post
+      data: this.post,
+      size: 'l'
     }).subscribe()
   }
 }

@@ -2,17 +2,17 @@
     <tui-elastic-container>
         <section class="slider">
             <section tuiSlides class="slides">
-                <img src="{{post.multimediaUrls[multimedia_index]}}">
+                <img src="{{post.multimediaUrls[multimedia_index()]}}">
             </section>
         </section>
     </tui-elastic-container>
 
     <div tuiGroup class="stepper">
         <button tuiIconButton appearance="secondary" iconStart="@tui.chevron-left" size="m" type="button"
-            [disabled]="multimedia_index === 0" (click)="multimedia_index -= 1"></button>
+            [disabled]="multimedia_index() === 0" (click)="prev()"></button>
 
         <button tuiIconButton appearance="secondary" iconStart="@tui.chevron-right" size="m" type="button"
-            [disabled]="multimedia_index === post.multimediaUrls.length - 1" (click)="multimedia_index += 1"></button>
+            [disabled]="multimedia_index() === post.multimediaUrls.length - 1" (click)="next()"></button>
     </div>
 
     <div class="post-about">

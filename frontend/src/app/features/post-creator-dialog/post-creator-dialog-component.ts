@@ -1,19 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiAppearance, TuiButton, TuiDialogContext, TuiGroup, TuiIcon, TuiInputDirective, TuiLink, TuiNotificationService, TuiTextfieldComponent, TuiTextfieldMultiComponent } from "@taiga-ui/core";
-import { TuiAvatar, TuiBadge, TuiButtonLoading, TuiFile, TuiFiles, TuiInputChipComponent, TuiInputChipDirective, TuiInputFiles, TuiTextareaComponent, TuiToastService } from "@taiga-ui/kit";
+import { TuiAppearance, TuiButton, TuiDialogContext, TuiGroup, TuiInputDirective, TuiLink, TuiNotificationService, TuiTextfieldComponent, TuiTextfieldMultiComponent } from "@taiga-ui/core";
+import { TuiAvatar, TuiButtonLoading, TuiFile, TuiFiles, TuiInputChipComponent, TuiInputChipDirective, TuiInputFiles, TuiTextareaComponent } from "@taiga-ui/kit";
 import { POLYMORPHEUS_CONTEXT, PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { map, switchMap } from 'rxjs';
 import { MultimediaPurpose } from '../../shared/multimedia/multimedia-purpose';
 import { MultimediaService } from '../../shared/multimedia/multimedia-service';
-import { FilePreviewPipe } from "../../shared/pipes/file-preview-pipe";
 import { PostsService } from '../../shared/post/services/posts-service';
-import { ToastComponent } from '../../shared/toasts/error-toast-component/toast-component';
+import { ToastComponent } from '../../shared/toasts/toast-component/toast-component';
 
 @Component({
   selector: 'app-post-creator-dialog-component',
-  imports: [TuiInputFiles, TuiAvatar, TuiIcon, TuiButtonLoading, TuiLink, TuiFiles, FormsModule, TuiFile, FilePreviewPipe, TuiTextfieldComponent, TuiTextfieldMultiComponent, TuiInputChipComponent, TuiInputChipDirective, TuiInputDirective, TuiTextareaComponent, TuiButton, TuiAppearance, TuiGroup, TuiBadge],
+  imports: [TuiInputFiles, TuiAvatar, TuiButtonLoading, TuiLink, TuiFiles, FormsModule, TuiFile, TuiTextfieldComponent, TuiTextfieldMultiComponent, TuiInputChipComponent, TuiInputChipDirective, TuiInputDirective,
+    TuiTextareaComponent, TuiButton, TuiAppearance, TuiGroup],
   templateUrl: './post-creator-dialog-component.html',
   styleUrl: './post-creator-dialog-component.scss',
 })

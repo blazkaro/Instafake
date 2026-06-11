@@ -5,7 +5,7 @@ import { TuiButton, TuiDialogService, TuiDropdownDirective, TuiDropdownHover, Tu
 import { TuiAvatar, TuiAvatarOutline, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { UserService } from '../../../core/services/user-service';
-import { PostOverviewComponent } from "../../../shared/post/post-overview-component";
+import { PostOverviewComponent } from '../../../shared/post/post-overview-component/post-overview-component';
 import { PostCreatorDialogComponent } from '../../post-creator-dialog/post-creator-dialog-component';
 import { PostListService } from './post-list-service';
 
