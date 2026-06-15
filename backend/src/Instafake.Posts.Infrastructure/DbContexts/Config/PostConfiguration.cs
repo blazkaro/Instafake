@@ -15,14 +15,20 @@ internal class PostConfiguration : IEntityTypeConfiguration<Post>
             .HasIndex(post => post.CreatedAt);
 
         builder
+            .HasIndex(post => new { post.CreatedAt, post.Id })
+            .IsUnique()
+            .IsDescending(true, true);
+
+        builder
             .HasOne(post => post.Author)
             .WithMany(user => user.AuthoredPosts)
             .HasForeignKey(post => post.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder
-            .HasMany(post => post.LikedBy)
-            .WithMany(user => user.LikedPosts);
+            .HasMany(post => post.Likes)
+            .WithOne(like => like.Post)
+            .HasForeignKey(like => like.PostId);
 
         builder
             .HasMany(post => post.Tags)

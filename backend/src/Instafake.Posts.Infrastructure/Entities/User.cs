@@ -7,5 +7,5 @@ internal class User
     public string AvatarUrl { get; set; }
     public ICollection<Post> AuthoredPosts { get; set; } = [];
     public ICollection<PostComment> AuthoredComments { get; set; } = [];
-    public ICollection<Post> LikedPosts { get; set; } = [];
+    public ICollection<PostLike> Likes { get; set; } = [];
 }

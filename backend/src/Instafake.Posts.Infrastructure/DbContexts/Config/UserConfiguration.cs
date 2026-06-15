@@ -25,7 +25,8 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .OnDelete(DeleteBehavior.NoAction);
 
         builder
-            .HasMany(user => user.LikedPosts)
-            .WithMany(post => post.LikedBy);
+            .HasMany(user => user.Likes)
+            .WithOne(like => like.User)
+            .HasForeignKey(like => like.UserId);
     }
 }

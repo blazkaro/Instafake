@@ -1,12 +1,12 @@
-﻿using Instafake.Posts.Application.Commands;
-using Instafake.Posts.Application.Repositories;
+﻿using Instafake.Posts.Application.Repositories;
+using Instafake.Posts.Domain.Entities;
 using MediatR;
 
-namespace Instafake.Posts.Infrastructure.Handlers.Commands;
+namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class CreateCommentCommandHandler(ICommentRepository repo) : IRequestHandler<CreateCommentCommand, Guid>
+internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo) : IRequestHandler<CreateCommentCommand, Guid>
 {
-    private readonly ICommentRepository _repo = repo;
+    private readonly IWriteRepository<Comment> _repo = repo;
 
     public async Task<Guid> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {

@@ -1,5 +1,6 @@
 using Instafake.Posts.Api.Services;
 using Instafake.Posts.Api.Workers;
+using Instafake.Posts.Application;
 using Instafake.Posts.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -17,7 +18,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddGrpc();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddControllers();
+
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddHostedService<AuthorEventsWorker>();
 
@@ -31,5 +35,7 @@ app.MapGrpcService<PosterService>()
     {
         policy.RequireAuthenticatedUser();
     });
+
+app.MapControllers();
 
 await app.RunAsync();

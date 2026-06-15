@@ -1,9 +1,9 @@
 ﻿namespace Instafake.Posts.Infrastructure.Entities;
 
-internal class PostTag
+internal class PostLike
 {
-    public Guid Id { get; set; }
     public Guid PostId { get; set; }
     public Post Post { get; set; }
-    public string Tag { get; set; }
+    public string UserId { get; set; }
+    public User User { get; set; }
 }

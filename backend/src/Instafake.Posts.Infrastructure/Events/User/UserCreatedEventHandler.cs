@@ -1,12 +1,13 @@
 ﻿using Instafake.Posts.Application.Events;
 using Instafake.Posts.Application.Repositories;
+using Instafake.Posts.Domain.Entities;
 using MediatR;
 
 namespace Instafake.Posts.Infrastructure.Events.User;
 
-internal class UserCreatedEventHandler(IAuthorRepository repo) : INotificationHandler<AuthorCreatedEvent>
+internal class UserCreatedEventHandler(IWriteRepository<Author> repo) : INotificationHandler<AuthorCreatedEvent>
 {
-    private readonly IAuthorRepository _repo = repo;
+    private readonly IWriteRepository<Author> _repo = repo;
 
     public async Task Handle(AuthorCreatedEvent notification, CancellationToken cancellationToken)
     {

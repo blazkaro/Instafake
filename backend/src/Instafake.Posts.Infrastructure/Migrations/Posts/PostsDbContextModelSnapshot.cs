@@ -32,12 +32,18 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("int");
 
                     b.PrimitiveCollection<string>("MultimediaUrls")
                         .IsRequired()
@@ -48,6 +54,10 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CreatedAt", "Id")
+                        .IsUnique()
+                        .IsDescending();
 
                     b.ToTable("Posts");
                 });
@@ -78,16 +88,33 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
 
                     b.HasIndex("PostId");
 
+                    b.HasIndex("CreatedAt", "Id")
+                        .IsUnique()
+                        .IsDescending();
+
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.PostLike", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PostId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostLikes");
                 });
 
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.PostTag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
@@ -126,21 +153,6 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PostUser", b =>
-                {
-                    b.Property<string>("LikedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("LikedPostsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LikedById", "LikedPostsId");
-
-                    b.HasIndex("LikedPostsId");
-
-                    b.ToTable("PostUser");
-                });
-
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.Post", b =>
                 {
                     b.HasOne("Instafake.Posts.Infrastructure.Entities.User", "Author")
@@ -171,6 +183,25 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.PostLike", b =>
+                {
+                    b.HasOne("Instafake.Posts.Infrastructure.Entities.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Instafake.Posts.Infrastructure.Entities.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.PostTag", b =>
                 {
                     b.HasOne("Instafake.Posts.Infrastructure.Entities.Post", "Post")
@@ -182,24 +213,11 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("PostUser", b =>
-                {
-                    b.HasOne("Instafake.Posts.Infrastructure.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("LikedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Instafake.Posts.Infrastructure.Entities.Post", null)
-                        .WithMany()
-                        .HasForeignKey("LikedPostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Instafake.Posts.Infrastructure.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
 
                     b.Navigation("Tags");
                 });
@@ -209,6 +227,8 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     b.Navigation("AuthoredComments");
 
                     b.Navigation("AuthoredPosts");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

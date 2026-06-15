@@ -8,6 +8,7 @@ internal class PostsDbContext(DbContextOptions<PostsDbContext> options) : DbCont
 {
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<PostComment> Comments => Set<PostComment>();
+    public DbSet<PostLike> PostLikes => Set<PostLike>();
     public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -16,6 +17,7 @@ internal class PostsDbContext(DbContextOptions<PostsDbContext> options) : DbCont
             .ApplyConfiguration(new PostConfiguration())
             .ApplyConfiguration(new CommentConfiguration())
             .ApplyConfiguration(new UserConfiguration())
-            .ApplyConfiguration(new PostTagConfiguration());
+            .ApplyConfiguration(new PostTagConfiguration())
+            .ApplyConfiguration(new PostLikeConfiguration());
     }
 }

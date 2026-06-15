@@ -5,7 +5,7 @@ using Instafake.Posts.Infrastructure.DbContexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Instafake.Posts.Infrastructure.Handlers.Queries;
+namespace Instafake.Posts.Infrastructure.QueryHandlers;
 
 internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetCommentsQuery, PaginationResult<IReadOnlyCollection<CommentDto>>>
 {

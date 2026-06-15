@@ -5,7 +5,7 @@ using Instafake.Posts.Infrastructure.DbContexts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Instafake.Posts.Infrastructure.Handlers.Queries;
+namespace Instafake.Posts.Infrastructure.QueryHandlers;
 
 internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, PaginationResult<IReadOnlyList<PostDto>>>
 {
@@ -31,17 +31,17 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
             .OrderByDescending(p => p.CreatedAt)
             .ThenByDescending(p => p.Id)
             .Take(pageSize)
-            .Select(p => new PostDto
+            .Select(post => new PostDto
             (
-                p.Id.ToString(),
-                new AuthorDto(p.AuthorId, p.Author.Name, p.Author.AvatarUrl),
-                p.Description,
-                p.MultimediaUrls,
-                p.Tags.Select(tag => tag.Tag).ToList(),
-                p.CreatedAt,
-                p.LikedBy.Count,
-                p.LikedBy.Any(p => p.Id == request.UserId),
-                p.Comments.Count
+                post.Id.ToString(),
+                new AuthorDto(post.AuthorId, post.Author.Name, post.Author.AvatarUrl),
+                post.Description,
+                post.MultimediaUrls,
+                post.Tags.Select(tag => tag.Tag).ToList(),
+                post.CreatedAt,
+                post.LikesCount,
+                post.Likes.Any(p => p.UserId == request.UserId),
+                post.CommentsCount
             ))
             .ToListAsync(cancellationToken);
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Instafake.Posts.Infrastructure.Migrations.Posts
 {
     /// <inheritdoc />
-    public partial class PostsMigration : Migration
+    public partial class PostsMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,9 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MultimediaUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LikesCount = table.Column<int>(type: "int", nullable: false),
+                    CommentsCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,11 +72,34 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 });
 
             migrationBuilder.CreateTable(
+                name: "PostLikes",
+                columns: table => new
+                {
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostLikes", x => new { x.PostId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_PostLikes_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostLikes_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PostTag",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tag = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -89,39 +114,27 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "PostUser",
-                columns: table => new
-                {
-                    LikedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LikedPostsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostUser", x => new { x.LikedById, x.LikedPostsId });
-                    table.ForeignKey(
-                        name: "FK_PostUser_Posts_LikedPostsId",
-                        column: x => x.LikedPostsId,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostUser_Users_LikedById",
-                        column: x => x.LikedById,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",
                 table: "Comments",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_CreatedAt_Id",
+                table: "Comments",
+                columns: new[] { "CreatedAt", "Id" },
+                unique: true,
+                descending: new bool[0]);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
                 table: "Comments",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostLikes_UserId",
+                table: "PostLikes",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorId",
@@ -134,6 +147,13 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Posts_CreatedAt_Id",
+                table: "Posts",
+                columns: new[] { "CreatedAt", "Id" },
+                unique: true,
+                descending: new bool[0]);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostTag_PostId",
                 table: "PostTag",
                 column: "PostId");
@@ -142,11 +162,6 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 name: "IX_PostTag_Tag",
                 table: "PostTag",
                 column: "Tag");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostUser_LikedPostsId",
-                table: "PostUser",
-                column: "LikedPostsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",
@@ -162,10 +177,10 @@ namespace Instafake.Posts.Infrastructure.Migrations.Posts
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "PostTag");
+                name: "PostLikes");
 
             migrationBuilder.DropTable(
-                name: "PostUser");
+                name: "PostTag");
 
             migrationBuilder.DropTable(
                 name: "Posts");

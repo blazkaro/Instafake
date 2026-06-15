@@ -15,6 +15,11 @@ internal class CommentConfiguration : IEntityTypeConfiguration<PostComment>
             .HasIndex(postComm => postComm.PostId);
 
         builder
+            .HasIndex(postComm => new { postComm.CreatedAt, postComm.Id })
+            .IsUnique()
+            .IsDescending(true, true);
+
+        builder
             .HasOne(postComm => postComm.Post)
             .WithMany(post => post.Comments)
             .HasForeignKey(postComm => postComm.PostId)

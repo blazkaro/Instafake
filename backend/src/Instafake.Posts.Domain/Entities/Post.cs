@@ -1,6 +1,6 @@
 ﻿namespace Instafake.Posts.Domain.Entities;
 
-public class Post
+public class Post : DomainEntity
 {
     private readonly List<string> _multimediaUrls = [];
     private readonly HashSet<string> _tags = [];

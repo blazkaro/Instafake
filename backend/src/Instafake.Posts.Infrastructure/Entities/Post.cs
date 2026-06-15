@@ -9,6 +9,8 @@ internal class Post
     public string Description { get; set; }
     public List<PostTag> Tags { get; set; } = [];
     public DateTime CreatedAt { get; set; }
-    public ICollection<User> LikedBy { get; set; } = [];
+    public int LikesCount { get; set; }
+    public int CommentsCount { get; set; }
+    public ICollection<PostLike> Likes { get; set; } = [];
     public ICollection<PostComment> Comments { get; set; } = [];
 }

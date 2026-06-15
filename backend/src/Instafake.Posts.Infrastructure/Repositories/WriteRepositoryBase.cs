@@ -2,7 +2,7 @@
 
 namespace Instafake.Posts.Infrastructure.Repositories;
 
-internal abstract class RepositoryBase<TEntity, TDbContext>(TDbContext dbContext)
+internal abstract class WriteRepositoryBase<TEntity, TDbContext>(TDbContext dbContext)
     where TEntity : class
     where TDbContext : DbContext
 {
