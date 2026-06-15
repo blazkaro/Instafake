@@ -6,5 +6,6 @@ export const apiConfig = {
 export enum ApiPaths {
     Auth = '/auth',
     Posts = '/posts',
-    Multimedia = '/multimedia'
+    Multimedia = '/multimedia',
+    Likes = '/likes'
 }
