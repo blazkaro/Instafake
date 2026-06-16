@@ -33,7 +33,7 @@ public class MultimediaController(IAmazonS3 s3Client, IOptions<StorageConfig> st
     [HttpPost("posts")]
     public async Task<IActionResult> Posts([FromBody][MaxLength(10)] List<FileMetadataDto> fileMetadataDtos)
     {
-        if (fileMetadataDtos.Sum(metadata => metadata.SizeBytes) > MAX_BYTES_SIZE)
+        if (fileMetadataDtos.Sum(metadata => metadata.SizeBytes!.Value) > MAX_BYTES_SIZE)
             return BadRequest($"Maximum allowed cumulative files size is {MAX_BYTES_SIZE / 1024}MiB");
 
         if (fileMetadataDtos.Any(metadata => !ALLOWED_MEDIA_TYPES.ContainsKey(metadata.ContentType) || !ALLOWED_MEDIA_TYPES[metadata.ContentType].Contains(metadata.Extension)))
@@ -64,7 +64,7 @@ public class MultimediaController(IAmazonS3 s3Client, IOptions<StorageConfig> st
                 Verb = HttpVerb.PUT,
                 Expires = DateTime.UtcNow.AddMinutes(3),
                 ContentType = metadata.ContentType,
-                Protocol = Protocol.HTTP
+                Protocol = Protocol.HTTP // TODO: dev only
             };
 
             tasks.Add(CreateUploadMetadata(req));

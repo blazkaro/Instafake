@@ -10,7 +10,7 @@ builder.Services.AddSingleton<IAmazonS3>(_ =>
 {
     var s3Config = new AmazonS3Config
     {
-        ForcePathStyle = true
+        ForcePathStyle = true // TODO: dev only
     };
 
     var awsOptions = builder.Configuration.GetRequiredSection("AWS_S3");

@@ -1,7 +1,12 @@
-﻿namespace Instafake.Posts.Api.Controllers.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Instafake.Posts.Api.Controllers.Dtos;
 
 public class UpdateLikeDto
 {
-    public Guid PostId { get; set; }
-    public bool Like { get; set; }
+    [Required]
+    public Guid? PostId { get; set; }
+
+    [Required]
+    public bool? Like { get; set; }
 }
