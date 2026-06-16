@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Instafake.IdentityEventsIngress.Controllers;
 
@@ -13,7 +14,7 @@ public class Auth0EventsController(IEventPublisher<UserCreatedEvent> userCreated
     private readonly IEventPublisher<UserCreatedEvent> _userCreatedPublisher = userCreatedPublisher;
 
     [HttpPost]
-    public async Task<IActionResult> HandleAsync([FromBody] Auth0UserCreatedEventDto ev, CancellationToken cancellationToken)
+    public async Task<IActionResult> HandleAsync([FromBody, Required] Auth0UserCreatedEventDto ev, CancellationToken cancellationToken)
     {
         var identityEvent = new UserCreatedEvent
         {
@@ -22,7 +23,7 @@ public class Auth0EventsController(IEventPublisher<UserCreatedEvent> userCreated
             UserId = ev.Data.Object.UserId,
             UserName = ev.Data.Object.Nickname,
             AvatarUrl = ev.Data.Object.Picture,
-            CreatedAt = ev.Data.Object.CreatedAt
+            CreatedAt = ev.Data.Object.CreatedAt!.Value
         };
 
         await _userCreatedPublisher.PublishAsync(identityEvent, cancellationToken);
