@@ -10,10 +10,11 @@ internal class PostsDbContextFactory : IDesignTimeDbContextFactory<PostsDbContex
     {
         var configBuilder = new ConfigurationBuilder()
             .AddUserSecrets<PostsDbContextFactory>(false)
+            .AddEnvironmentVariables()
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<PostsDbContext>();
-        optionsBuilder.UseSqlServer(configBuilder.GetConnectionString("Mssql"));
+        optionsBuilder.UseSqlServer(configBuilder.GetConnectionString("posts-api-db"));
 
         return new PostsDbContext(optionsBuilder.Options);
     }

@@ -22,7 +22,7 @@ public class AuthController(IOptions<FrontendConfig> frontendConfig) : Controlle
         if (!returnUrl.StartsWith('/'))
             returnUrl = "/"; // if path isn't local ignore it to prevent open redirection attacks
 
-        var redirectUri = $"{_frontendConfig.Value.Uri.ToString().TrimEnd('/')}{returnUrl}";
+        var redirectUri = $"{_frontendConfig.Value.Url.ToString().TrimEnd('/')}{returnUrl}";
         var authProperties = new LoginAuthenticationPropertiesBuilder()
             .WithRedirectUri(redirectUri)
             .Build();

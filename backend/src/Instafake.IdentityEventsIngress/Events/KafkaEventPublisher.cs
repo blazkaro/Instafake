@@ -24,7 +24,7 @@ public class KafkaEventPublisher<TEvent>(IProducer<string, string> producer, Ret
 
             await _producer.ProduceAsync(TOPIC, new() { Key = ev.UserId, Value = JsonSerializer.Serialize(ev), Headers = headers }, cancellationToken);
         }
-        catch
+        catch (Exception ex) when (ex is not TaskCanceledException)
         {
             _retryQueue.Enqueue(ev);
         }

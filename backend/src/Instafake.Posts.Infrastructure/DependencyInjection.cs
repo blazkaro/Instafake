@@ -20,7 +20,7 @@ public static class DependencyInjection
         {
             services.AddDbContext<PostsDbContext>(cfg =>
             {
-                cfg.UseSqlServer(configuration.GetConnectionString("Mssql"));
+                cfg.UseSqlServer(configuration.GetConnectionString("posts-api-db"));
             });
 
             services.AddScoped<IWriteRepository<Domain.Entities.Post>, PostWriteRepository>();

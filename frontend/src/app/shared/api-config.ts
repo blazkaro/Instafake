@@ -1,6 +1,6 @@
 export const apiConfig = {
     production: false,
-    baseUrl: 'https://instafake-bff.dev.localhost:7153/api',
+    baseUrl: '/api',
 }
 
 export enum ApiPaths {

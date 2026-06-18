@@ -5,12 +5,14 @@ using Instafake.ServiceDefaults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Services.AddSingleton<IAmazonS3>(_ =>
 {
+    bool isDev = builder.Environment.IsDevelopment();
     var s3Config = new AmazonS3Config
     {
-        ForcePathStyle = true // TODO: dev only
+        ForcePathStyle = isDev
     };
 
     var awsOptions = builder.Configuration.GetRequiredSection("AWS_S3");
@@ -35,7 +37,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 
-builder.AddServiceDefaults();
 var app = builder.Build();
 
 app.UseAuthentication();

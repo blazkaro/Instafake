@@ -10,6 +10,6 @@ import { apiConfig, ApiPaths } from '../../shared/api-config';
 })
 export class SigninComponent {
   redirectToIdentityProvider() {
-    window.location.href = `${apiConfig.baseUrl.replace('/api', '')}${ApiPaths.Auth}/signin`
+    window.location.href = `${apiConfig.baseUrl}${ApiPaths.Auth}/signin`
   }
 }

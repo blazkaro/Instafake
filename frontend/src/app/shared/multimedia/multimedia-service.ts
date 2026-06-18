@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { ApiPaths } from '../api-config';
+import { apiConfig, ApiPaths } from '../api-config';
 import { MultimediaPurpose } from './multimedia-purpose';
 
 interface FileMetadata {
@@ -35,7 +35,7 @@ export class MultimediaService {
       sizeBytes: file.size
     }));
 
-    return this.http.post<UploadMetadata[]>(`api${ApiPaths.Multimedia}/${path}`, body, { withCredentials: true }).pipe(
+    return this.http.post<UploadMetadata[]>(`${apiConfig.baseUrl}${ApiPaths.Multimedia}/${path}`, body, { withCredentials: true }).pipe(
       map(result => result.map<UploadMetadata>(metadata => ({ uploadUrl: URL.parse(metadata.uploadUrl)!, publicUrl: URL.parse(metadata.publicUrl)! })))
     );
   }

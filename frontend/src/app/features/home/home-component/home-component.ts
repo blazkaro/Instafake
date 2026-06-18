@@ -33,7 +33,7 @@ export class HomeComponent {
   }
 
   onSearchInputChange(newValue: string[]) {
-    this.postListService.onSearchQueryChange(newValue);
+    this.searchInput = this.postListService.onSearchQueryChange(newValue);
   }
 
   openPostCreator() {

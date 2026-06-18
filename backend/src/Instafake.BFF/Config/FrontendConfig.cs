@@ -2,5 +2,5 @@
 
 public class FrontendConfig
 {
-    public required Uri Uri { get; set; }
+    public Uri Url { get; set; }
 }

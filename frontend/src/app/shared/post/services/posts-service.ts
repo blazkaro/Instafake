@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ApiPaths } from '../../api-config';
+import { apiConfig, ApiPaths } from '../../api-config';
 import { PaginationRequest, PaginationResponse } from '../../pagination/cursor-pagination';
 import { Post } from '../models/post';
 import { addPaginationParams } from '../../utils/http-params.utils';
@@ -34,7 +34,7 @@ export class PostsService {
     }
 
     params = addPaginationParams(params, pagination);
-    return this.http.get<GetPostsResponse>(`api${ApiPaths.Posts}`, {
+    return this.http.get<GetPostsResponse>(`${apiConfig.baseUrl}${ApiPaths.Posts}`, {
       withCredentials: true,
       params: params
     }).pipe(
@@ -53,7 +53,7 @@ export class PostsService {
   * @returns Observable with post id
   */
   createPost(multimediaUrls: URL[], description: string, tags: string[]): Observable<CreatePostResponse> {
-    return this.http.post<CreatePostResponse>(`api${ApiPaths.Posts}`, {
+    return this.http.post<CreatePostResponse>(`${apiConfig.baseUrl}${ApiPaths.Posts}`, {
       multimediaUrls: multimediaUrls.map(val => val.href),
       description: description,
       tags: tags

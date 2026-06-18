@@ -5,12 +5,13 @@ using Instafake.BFF.Config;
 using Instafake.BFF.ExceptionHandlers;
 using Instafake.BFF.ServicesProtos.Post;
 using Instafake.ServiceDefaults;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Net.Http.Headers;
 using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+
 var services = builder.Services;
 
 services.AddControllers();
@@ -34,35 +35,41 @@ services.AddAuthorization();
 
 services.AddOpenIdConnectAccessTokenManagement();
 
+/*
 builder.Services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
     options.Cookie.Domain = ".dev.localhost";
 });
+*/
 
 var grpcServicesConfig = builder.Configuration.GetRequiredSection("GrpcServices");
+var postsGrpcServiceConfig = grpcServicesConfig.GetRequiredSection("Posts");
 services.AddGrpcClient<Poster.PosterClient>(cfg =>
 {
-    cfg.Address = grpcServicesConfig.GetValue<Uri>("Post:Uri");
+    cfg.Address = postsGrpcServiceConfig.GetValue<Uri>("Url");
 }).AddUserAccessTokenHandler().AddDefaultAccessTokenResiliency();
 
-var frontend = builder.Configuration.GetRequiredSection("Frontend");
-services.Configure<FrontendConfig>(frontend);
+var frontendConfig = new FrontendConfig();
+var frontendSection = builder.Configuration.GetRequiredSection("Frontend");
+frontendSection.Bind(frontendConfig);
+
+services.Configure<FrontendConfig>(frontendSection);
 
 services.AddCors(cfg =>
 {
     cfg.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(frontend.GetValue<string>("Uri"));
+        policy.WithOrigins(frontendConfig.Url.AbsoluteUri);
         policy.AllowAnyMethod();
         policy.AllowAnyHeader();
         policy.AllowCredentials();
     });
 });
 
-builder.AddServiceDefaults();
 services.AddExceptionHandler<GrpcExceptionHandler>();
 services.AddProblemDetails();
 
+services.AddHttpForwarderWithServiceDiscovery();
 services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetRequiredSection("ReverseProxy"))
     .AddTransforms(builder =>
@@ -75,7 +82,7 @@ services.AddReverseProxy()
 
             ctx.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", userToken.Token.AccessToken);
         });
-    });
+    }).AddServiceDiscoveryDestinationResolver();
 
 var app = builder.Build();
 
