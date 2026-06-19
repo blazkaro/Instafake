@@ -57,7 +57,7 @@ export class PostCreatorDialogComponent {
       }),
       switchMap(publicUrls =>
         this.postsService.createPost(publicUrls, this.description, tags)
-      )
+      ),
     ).subscribe({
       error: (err: HttpErrorResponse) => {
         this.notificationsService.open(new PolymorpheusComponent(ToastComponent), {
@@ -80,7 +80,7 @@ export class PostCreatorDialogComponent {
         }).subscribe();
 
         this.processing.set(false);
-        this.context.completeWith(false);
+        this.context.completeWith(true);
       }
     });
   }

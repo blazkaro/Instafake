@@ -41,7 +41,6 @@ export class MultimediaService {
   }
 
   upload(targets: { file: File, uploadUrl: URL }[]): Observable<{}[]> {
-    console.log(targets);
     const uploads = targets.map(target => {
       const headers = new HttpHeaders({ 'Content-Type': target.file.type });
       return this.http.put<{}>(target.uploadUrl.href, target.file, { headers: headers });

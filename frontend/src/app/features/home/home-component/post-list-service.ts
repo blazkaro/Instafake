@@ -59,8 +59,8 @@ export class PostListService {
     this.cursor.set(null);
 
     // update username if changed
-    if (newestUsername) {
-      this.userName.set(newestUsername.substring(1));
+    if (newestUsername !== this.userName()) {
+      this.userName.set(newestUsername?.substring(1) ?? null);
     }
 
     // update tags if changed

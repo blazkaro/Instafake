@@ -37,8 +37,12 @@ export class HomeComponent {
   }
 
   openPostCreator() {
-    this.dialogs.open(new PolymorpheusComponent(PostCreatorDialogComponent), {
+    this.dialogs.open<boolean>(new PolymorpheusComponent(PostCreatorDialogComponent), {
       size: 'l'
-    }).subscribe();
+    }).subscribe(created => {
+      if (created) {
+        this.onSearchInputChange([`@${this.userService.user()?.userName}`]);
+      }
+    });
   }
 }
