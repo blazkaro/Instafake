@@ -25,6 +25,9 @@ App that tries to behave (not necessarily look) like Instagram. Built with high-
 
     - Of course, we could create more specialized application layer repositories or services in order to satisfy DDD. However, that would create empty, pass-through abstraction layers and a lot of unnecessary code while losing the emphasis of what is really important.
 
+- #### Why gRPC?
+    - Where its used, it doesn't help a lot. It was implemented purely to show I had exposure to it, dealt with some related issues. But, in this case, why isn't this fast binary protocol better than just REST with JSON? It's due to how communication happens where gRPC is implemented: frontend -> BFF -> posts. Browsers do not support gRPC, so BFF have to deserialize JSON, serialize it to gRPC message, then deserialize gRPC response to JSON. No performance gains, unnecessary overhead and code duplication.
+
 
 - #### Why CQRS, and how?
     - Again, performance. We don't want to load whole infrastructure layer entities (a lot of data, joins, relationships), map to domain layer entities, then to application layer DTOs. We just want some data to satisfy UI! Additionally, the demand of QUERY posts is expected to be much higher than CREATE/LIKE post. In the future, the clear separation of read/write could be helpful when redesigning db architecture (e.g. separate write-only and read-only).
