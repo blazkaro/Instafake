@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
-import { PaginationRequest } from '../pagination/cursor-pagination';
+import { PaginatedResponse, PaginationRequest, PaginationResponse } from '../pagination/cursor-pagination';
+import { map } from 'rxjs';
 
 export function addPaginationParams(
     params: HttpParams,
@@ -21,4 +22,15 @@ export function addPaginationParams(
     params = params.set('pagination.cursor.lastItemCreatedAt', pagination.cursor.lastItemCreatedAt.toISOString());
     params = params.set('pagination.cursor.id', pagination.cursor.id);
     return params;
+}
+
+export function serializePaginatedResponse<TData>() {
+    return map((response: PaginatedResponse<TData>) => {
+        const cursor = response.pagination.nextCursor;
+        if (cursor?.lastItemCreatedAt) {
+            cursor.lastItemCreatedAt = new Date(cursor.lastItemCreatedAt);
+        }
+
+        return response;
+    });
 }

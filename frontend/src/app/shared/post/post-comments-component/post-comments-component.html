@@ -1,0 +1,23 @@
+<div>
+    <div class="actions">
+        <tui-textfield iconStart="@tui.hand-heart" tuiTextfieldSize="m" class="content">
+            <label tuiLabel>Express your jealousy...</label>
+            <textarea tuiTextarea [max]="2" [(ngModel)]="message"></textarea>
+        </tui-textfield>
+        <button tuiIconButton iconStart="@tui.message-circle-plus" appearance="action-destructive"
+            tuiHint="psss... be kind" (click)="createComment()"></button>
+    </div>
+
+    <div class="comments">
+        @for (comment of commentsListService.items(); track comment.id) {
+        <app-post-comment-component [comment]="comment">
+        </app-post-comment-component>
+        }
+    </div>
+
+    <div #sentinel class="sentinel"></div>
+
+    @if(commentsListService.isLoading()){
+    <tui-loader></tui-loader>
+    }
+</div>

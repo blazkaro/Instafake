@@ -1,4 +1,4 @@
-export interface PaginationRequest{
+export interface PaginationRequest {
     pageSize: number;
     cursor: CursorPagination | null;
 }
@@ -11,4 +11,9 @@ export interface PaginationResponse {
 export interface CursorPagination {
     lastItemCreatedAt: Date;
     id: string;
+}
+
+export interface PaginatedResponse<TData> {
+    items: TData[];
+    pagination: PaginationResponse;
 }

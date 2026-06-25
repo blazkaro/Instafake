@@ -19,7 +19,7 @@
     </div>
     <div class="posts-container">
         <div class="posts">
-            @for (post of postListService.posts(); track post.id) {
+            @for (post of postListService.items(); track post.id) {
             <app-post-component [post]="post" class="post"></app-post-component>
             }
         </div>

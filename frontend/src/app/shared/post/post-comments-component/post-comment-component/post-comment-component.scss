@@ -1,0 +1,40 @@
+.container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+
+    box-shadow: var(--tui-shadow-medium-hover);
+    border-radius: 15px;
+
+    :not(tui-avatar-labeled) {
+        font-family: "Crafty Girls", cursive;
+        font-style: normal;
+    }
+
+    max-height: 150px;
+    overflow: auto;
+}
+
+.created-at {
+    color: var(--tui-text-primary);
+    font-size: 12px;
+    float: right;
+    background: linear-gradient(to right, #ff5c00, #ff0069, #d300c5);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+tui-avatar-labeled {
+    float: left;
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+.content {
+    font-size: 12px;
+    color: var(--tui-text-primary);
+    font-family: "Crafty Girls", cursive;
+    font-weight: 600;
+    letter-spacing: 1px;
+}

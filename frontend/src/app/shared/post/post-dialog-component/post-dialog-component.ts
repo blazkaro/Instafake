@@ -3,10 +3,15 @@ import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { TuiAppearance, TuiButton, TuiDialogContext, TuiGroup, TuiIcon } from '@taiga-ui/core';
 import { TuiAvatar, TuiAvatarLabeled } from "@taiga-ui/kit";
 import { TuiElasticContainer, TuiSlides } from "@taiga-ui/layout";
-import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
+import { POLYMORPHEUS_CONTEXT, PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { CompactNumberPipe } from '../../pipes/compact-number-pipe';
 import { Post } from '../models/post';
 import { LikesService } from '../services/likes-service';
+import { TuiSheetDialogService } from '@taiga-ui/addon-mobile';
+import { PostCommentsComponent } from '../post-comments-component/post-comments-component';
+import { PostEventsService } from '../services/post-events-service';
+import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-post-dialog-component',
@@ -18,11 +23,23 @@ export class PostDialogComponent implements OnDestroy {
   private readonly likesService = inject(LikesService);
 
   private readonly context = inject<TuiDialogContext<boolean, Post>>(POLYMORPHEUS_CONTEXT);
-  public readonly post: Post = this.context.data;
+  protected readonly post: Post = this.context.data;
+
+  private readonly sheetsService = inject(TuiSheetDialogService);
+  private readonly postEventsService = inject(PostEventsService);
 
   private readonly initLikeStatus = this.post.likedByUser;
 
   multimedia_index = signal<number>(0);
+
+  protected commentsCount = signal(this.post.commentsCount); 
+  private commentsAddedSub = this.postEventsService.commentAdded$.pipe(
+    filter(ev => ev.postId == this.post.id),
+    takeUntilDestroyed()
+  ).subscribe(_ => {
+    this.post.commentsCount += 1;
+    this.commentsCount.update(cur => cur + 1);
+  });
 
   toggleLike() {
     this.post.likedByUser = !this.post.likedByUser;
@@ -41,6 +58,10 @@ export class PostDialogComponent implements OnDestroy {
       return;
 
     this.multimedia_index.update(cur => cur + 1);
+  }
+
+  openComments() {
+    this.sheetsService.open(new PolymorpheusComponent(PostCommentsComponent), { ...PostCommentsComponent.defaultOptions, data: this.post }).subscribe();
   }
 
   ngOnDestroy(): void {

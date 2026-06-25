@@ -41,9 +41,9 @@
                         <tui-icon [icon]="post.likedByUser ? '@tui.heart-filled' : '@tui.heart'"></tui-icon>
                         <div>{{post.likesCount | compactNumber}}</div>
                     </button>
-                    <button tuiButton appearance="action" type="button" class="action" size="xs">
+                    <button tuiButton appearance="action" type="button" class="action" size="xs" (click)="openComments()">
                         <tui-icon icon="@tui.messages-square"></tui-icon>
-                        <div>{{post.commentsCount | compactNumber}}</div>
+                        <div>{{commentsCount() | compactNumber}}</div>
                     </button>
                     <button tuiIconButton appearance="action-grayscale" type="button" class="action" size="xs">
                         <tui-icon icon="@tui.link"></tui-icon>

@@ -1,8 +1,8 @@
-import { PostAuthor } from "./post-author";
+import { Author } from "./author";
 
 export interface Post{
     id: string;
-    author: PostAuthor;
+    author: Author;
     description: string;
     multimediaUrls: string[];
     tags: string[];

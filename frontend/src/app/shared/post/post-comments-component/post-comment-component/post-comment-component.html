@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="created-at">
+        {{comment().createdAt | date: 'short'}}
+    </div>
+    <tui-avatar-labeled label="{{comment().author.name}}">
+        <div [size]="'m'" tuiAvatar>
+            <img src="{{comment().author.avatarUrl}}">
+        </div>
+    </tui-avatar-labeled>
+    <span class="content">
+        {{comment().content}}
+    </span>
+</div>

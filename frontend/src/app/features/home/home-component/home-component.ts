@@ -5,9 +5,10 @@ import { TuiButton, TuiDialogService, TuiDropdownDirective, TuiDropdownHover, Tu
 import { TuiAvatar, TuiAvatarOutline, TuiChip, TuiInputChipComponent, TuiInputChipDirective } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { UserService } from '../../../core/services/user-service';
+import { InfiniteScrollService } from '../../../shared/infinite-scroll/infinite-scroll-service';
 import { PostOverviewComponent } from '../../../shared/post/post-overview-component/post-overview-component';
 import { PostCreatorDialogComponent } from '../../post-creator-dialog/post-creator-dialog-component';
-import { PostListService } from './post-list-service';
+import { PostListService } from '../post-list-service';
 
 @Component({
   selector: 'app-home-component',
@@ -15,10 +16,11 @@ import { PostListService } from './post-list-service';
     TuiDropdownDirective, TuiButton, TuiGroup],
   templateUrl: './home-component.html',
   styleUrl: './home-component.scss',
-  providers: [PostListService]
+  providers: [PostListService, InfiniteScrollService]
 })
 export class HomeComponent {
-  private dialogs = inject(TuiDialogService);
+  private readonly dialogs = inject(TuiDialogService);
+  private readonly infiniteScrollService = inject(InfiniteScrollService);
 
   protected searchInput: string[] = [];
   private sentinel = viewChild<ElementRef<HTMLElement>>('sentinel');
@@ -28,7 +30,7 @@ export class HomeComponent {
 
   constructor() {
     effect(() => {
-      this.postListService.observeSentinel(this.sentinel());
+      this.infiniteScrollService.observeSentinel(this.sentinel(), () => this.postListService.loadMore());
     });
   }
 

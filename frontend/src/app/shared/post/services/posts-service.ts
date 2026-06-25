@@ -1,15 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { apiConfig, ApiPaths } from '../../api-config';
-import { PaginationRequest, PaginationResponse } from '../../pagination/cursor-pagination';
+import { PaginatedResponse, PaginationRequest } from '../../pagination/cursor-pagination';
 import { Post } from '../models/post';
-import { addPaginationParams } from '../../utils/http-params.utils';
-
-export interface GetPostsResponse {
-  posts: Post[];
-  pagination: PaginationResponse;
-}
+import { addPaginationParams, serializePaginatedResponse } from '../../pagination/pagination.utils';
 
 export interface CreatePostResponse {
   id: string;
@@ -21,7 +16,7 @@ export interface CreatePostResponse {
 export class PostsService {
   private http = inject(HttpClient);
 
-  getPosts(tags: string[] = [], authorName: string | null = null, pagination: PaginationRequest): Observable<GetPostsResponse> {
+  getPosts(tags: string[] = [], authorName: string | null = null, pagination: PaginationRequest): Observable<PaginatedResponse<Post>> {
     let params = new HttpParams();
     if (tags != undefined && tags?.length > 0) {
       for (const tag of tags) {
@@ -34,18 +29,11 @@ export class PostsService {
     }
 
     params = addPaginationParams(params, pagination);
-    return this.http.get<GetPostsResponse>(`${apiConfig.baseUrl}${ApiPaths.Posts}`, {
+    return this.http.get<PaginatedResponse<Post>>(`${apiConfig.baseUrl}${ApiPaths.Posts}`, {
       withCredentials: true,
       params: params
     }).pipe(
-      map((response) => {
-        const cursor = response.pagination.nextCursor;
-        if (cursor?.lastItemCreatedAt) {
-          cursor.lastItemCreatedAt = new Date(cursor.lastItemCreatedAt);
-        }
-
-        return response;
-      })
+      serializePaginatedResponse()
     );
   }
 
