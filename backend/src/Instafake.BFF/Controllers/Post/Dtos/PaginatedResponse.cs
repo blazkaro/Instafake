@@ -2,6 +2,6 @@
 
 namespace Instafake.BFF.Controllers.Post.Dtos;
 
-public record GetCommentsResponse(CommentDto[] Comments, PaginationResultDto? Pagination)
+public record PaginatedResponse<TData>(List<TData> Items, PaginationResultDto? Pagination)
 {
 }

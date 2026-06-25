@@ -49,4 +49,16 @@ internal static class EntitiesMapping
             };
         }
     }
+
+    extension(Domain.Entities.PostLike postLike)
+    {
+        public Infrastructure.Entities.PostLike ToEntity()
+        {
+            return new()
+            {
+                PostId = postLike.PostId,
+                UserId = postLike.UserId
+            };
+        }
+    }
 }

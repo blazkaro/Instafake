@@ -44,7 +44,7 @@ message PostDto{
 }
 
 message GetPostsReply{
-	repeated PostDto posts = 1;
+	repeated PostDto items = 1;
 	pagination.PaginationReply pagination = 2;
 }
 
@@ -61,7 +61,7 @@ message CommentDto{
 }
 
 message GetCommentsReply{
-	repeated CommentDto comments = 1;
+	repeated CommentDto items = 1;
 	pagination.PaginationReply pagination = 2;
 }
 

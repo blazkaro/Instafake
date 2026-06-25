@@ -1,11 +1,10 @@
-﻿using Instafake.Posts.Application.Commands;
-using Instafake.Posts.Application.Repositories;
+﻿using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Entities;
 using MediatR;
 
 namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class CreatePostCommandHandler(IWriteRepository<Post> repo) : IRequestHandler<CreatePostCommand, Guid>
+internal class CreatePostCommandHandler(IWriteRepository<Post> repo, IPublisher publisher) : CommandHandlerBase<Post>(publisher), IRequestHandler<CreatePostCommand, Guid>
 {
     private readonly IWriteRepository<Post> _repo = repo;
 

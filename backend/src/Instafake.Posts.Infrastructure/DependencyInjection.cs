@@ -1,11 +1,9 @@
 ﻿using Instafake.Posts.Application.Events;
 using Instafake.Posts.Application.Repositories;
-using Instafake.Posts.Application.Services;
 using Instafake.Posts.Infrastructure.DbContexts;
 using Instafake.Posts.Infrastructure.Events.User;
 using Instafake.Posts.Infrastructure.Factories;
 using Instafake.Posts.Infrastructure.Repositories;
-using Instafake.Posts.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,11 +24,10 @@ public static class DependencyInjection
             services.AddScoped<IWriteRepository<Domain.Entities.Post>, PostWriteRepository>();
             services.AddScoped<IWriteRepository<Domain.Entities.Comment>, CommentWriteRepository>();
             services.AddScoped<IWriteRepository<Domain.Entities.Author>, AuthorWriteRepository>();
+            services.AddScoped<IWriteRepository<Domain.Entities.PostLike>, PostLikeWriteRepository>();
 
             services.AddSingleton<IConsumerFactory, ConsumerFactory>();
             services.AddKeyedSingleton<IEventsConsumer, KafkaUserEventsConsumer>("authors");
-
-            services.AddScoped<ILikeService, LikeService>();
 
             services.AddMediatR(cfg =>
             {

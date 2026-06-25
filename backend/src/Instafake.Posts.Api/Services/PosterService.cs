@@ -13,6 +13,18 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
 {
     private readonly IMediator _mediator = mediator;
 
+    public override async Task<CreateCommentReply> CreateComment(CreateCommentRequest request, ServerCallContext context)
+    {
+        var userId = context.GetAccessTokenSubject()!;
+        if (!Guid.TryParse(request.PostId, out var postId))
+        {
+            throw new RpcException(new Status(StatusCode.NotFound, "Invalid post id"));
+        }
+
+        var commentId = await _mediator.Send(new CreateCommentCommand(userId, postId, request.Content));
+        return new CreateCommentReply { Id = commentId.ToString() };
+    }
+
     public override async Task<CreatePostReply> CreatePost(CreatePostRequest request, ServerCallContext context)
     {
         var userId = context.GetAccessTokenSubject()!;
@@ -30,7 +42,7 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
         var commentsPaginated = await _mediator.Send(new GetCommentsQuery(postId, request.Pagination.ToPaginationDto()), context.CancellationToken);
         var reply = new GetCommentsReply()
         {
-            Comments = { commentsPaginated.Result.Select(comment => new Protos.CommentDto
+            Items = { commentsPaginated.Result.Select(comment => new Protos.CommentDto
             {
                 Id = comment.Id,
                 Author = new Protos.Shared.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
@@ -49,7 +61,7 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
         var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()), context.CancellationToken);
         var reply = new GetPostsReply()
         {
-            Posts = { postsPaginated.Result.Select(post => new Protos.PostDto
+            Items = { postsPaginated.Result.Select(post => new Protos.PostDto
             {
                 Id = post.Id,
                 Author = new Protos.Shared.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },

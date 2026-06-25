@@ -1,10 +1,11 @@
 ﻿using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Entities;
+using Instafake.Posts.Domain.Events;
 using MediatR;
 
 namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo) : IRequestHandler<CreateCommentCommand, Guid>
+internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo, IPublisher publisher) : CommandHandlerBase<Comment>(publisher), IRequestHandler<CreateCommentCommand, Guid>
 {
     private readonly IWriteRepository<Comment> _repo = repo;
 
@@ -20,6 +21,10 @@ internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo) : IRe
         };
 
         await _repo.SaveAsync(comment, cancellationToken);
+
+        comment.AddEvent(new CommentCreatedEvent(comment.PostId, comment.Id));
+        await DispatchEvents(comment);
+
         return comment.Id;
     }
 }

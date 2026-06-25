@@ -15,7 +15,7 @@ public class PostsController(Poster.PosterClient client) : ControllerBase
     private readonly Poster.PosterClient _client = client;
 
     [HttpPost]
-    public async Task<IActionResult> CreatePostAsync(Dtos.CreatePostRequest dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreatePostAsync([FromBody] Dtos.CreatePostRequest dto, CancellationToken cancellationToken)
     {
         var reply = await _client.CreatePostAsync(new ServicesProtos.Post.CreatePostRequest
         {
@@ -42,8 +42,8 @@ public class PostsController(Poster.PosterClient client) : ControllerBase
             protoRequest.Tags.AddRange(dto.Tags);
 
         var reply = await _client.GetPostsAsync(protoRequest, cancellationToken: cancellationToken);
-        return Ok(new GetPostsResponse(
-            [.. reply.Posts.Select(protoPost => new Dtos.PostDto(
+        return Ok(new PaginatedResponse<Dtos.PostDto>(
+            [.. reply.Items.Select(protoPost => new Dtos.PostDto(
                 protoPost.Id,
                 new Dtos.AuthorDto(protoPost.Author.Id, protoPost.Author.Name, protoPost.Author.AvatarUrl),
                 protoPost.Description,
@@ -57,11 +57,11 @@ public class PostsController(Poster.PosterClient client) : ControllerBase
     }
 
     [HttpPost("{postId}/comments")]
-    public async Task<IActionResult> CreateCommentAsync(Dtos.CreateCommenRequest dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateCommentAsync(string postId, [FromBody] Dtos.CreateCommenRequest dto, CancellationToken cancellationToken)
     {
         var reply = await _client.CreateCommentAsync(new ServicesProtos.Post.CreateCommentRequest
         {
-            PostId = dto.PostId,
+            PostId = postId,
             Content = dto.Content
         }, cancellationToken: cancellationToken);
 
@@ -69,16 +69,16 @@ public class PostsController(Poster.PosterClient client) : ControllerBase
     }
 
     [HttpGet("{postId}/comments")]
-    public async Task<IActionResult> GetCommentsAsync([FromQuery] Dtos.GetCommentsRequest dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetCommentsAsync(string postId, [FromQuery] Dtos.GetCommentsRequest dto, CancellationToken cancellationToken)
     {
         var reply = await _client.GetCommentsAsync(new ServicesProtos.Post.GetCommentsRequest
         {
-            PostId = dto.PostId,
+            PostId = postId,
             Pagination = dto.Pagination.ToProtoPaginationRequest()
         }, cancellationToken: cancellationToken);
 
-        return Ok(new GetCommentsResponse(
-            [..reply.Comments.Select(protoComment => new Dtos.CommentDto(
+        return Ok(new PaginatedResponse<Dtos.CommentDto>(
+            [..reply.Items.Select(protoComment => new Dtos.CommentDto(
                 protoComment.Id,
                 new Dtos.AuthorDto(protoComment.Author.Id, protoComment.Author.Name, protoComment.Author.AvatarUrl),
                 protoComment.Content,
