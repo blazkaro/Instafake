@@ -1,10 +1,38 @@
 using Confluent.Kafka;
 using Instafake.IdentityEventsIngress.Events;
-using Instafake.IdentityEventsIngress.Retry;
 using Instafake.ServiceDefaults;
+using JasperFx.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Reflection;
+using Wolverine;
+using Wolverine.Kafka;
+using Wolverine.Postgresql;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.UseWolverine(options =>
+{
+    options.UseRuntimeCompilation();
+    options.Discovery.IncludeAssembly(Assembly.GetExecutingAssembly());
+
+    options.PersistMessagesWithPostgresql(builder.Configuration.GetConnectionString("identity-events-ingress-api-db"));
+
+    options.Policies.AutoApplyTransactions();
+
+    var kafkaHost = builder.Configuration.GetRequiredSection("Kafka:Host").Get<ConsumerConfig>()!;
+    options.UseKafka(kafkaHost.BootstrapServers)
+        .AutoProvision();
+
+    var kafkaDefaultProducer = builder.Configuration.GetSection("Kafka:Producers:Default").Get<ProducerConfig>() ?? new ProducerConfig();
+
+    var usersProducer = new ProducerConfig(kafkaDefaultProducer);
+    builder.Configuration.GetSection("Kafka:Producers:Users").Bind(usersProducer);
+
+    options.PublishMessage<UserCreatedEvent>()
+        .ToKafkaTopic("users")
+        .UseDurableOutbox();
+});
+builder.Host.UseResourceSetupOnStartup();
+
 builder.AddServiceDefaults();
 builder.Services.AddControllers();
 
@@ -18,17 +46,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
-
-builder.Services.AddSingleton<IProducer<string, string>>(provider =>
-{
-    var config = builder.Configuration.GetRequiredSection("Kafka").Get<ProducerConfig>();
-    return new ProducerBuilder<string, string>(config).Build();
-});
-
-builder.Services.AddSingleton<RetryQueue<UserCreatedEvent>>();
-builder.Services.AddSingleton<IEventPublisher<UserCreatedEvent>, KafkaEventPublisher<UserCreatedEvent>>();
-
-builder.Services.AddHostedService<KafkaRetryWorker<UserCreatedEvent>>();
 
 var app = builder.Build();
 

@@ -1,5 +1,8 @@
-﻿namespace Instafake.IdentityEventsIngress.Events;
+﻿using Wolverine.Attributes;
 
+namespace Instafake.IdentityEventsIngress.Events;
+
+[MessageIdentity(IdentityEvents.UserCreated)]
 public class UserCreatedEvent : EventBase
 {
     public string UserName { get; set; }
