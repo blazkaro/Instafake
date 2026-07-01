@@ -6,7 +6,7 @@ using Wolverine;
 
 namespace Instafake.Profiles.Application.Commands.Handlers;
 
-internal class UpdateFollowCommandHandler
+public class UpdateFollowCommandHandler
 {
     public async Task<(Result Result, OutgoingMessages)> Handle(UpdateFollowCommand request, IWriteRepository<Follow> repo, CancellationToken cancellationToken)
     {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Profiles.Infrastructure.Repositories;
 
-internal class FollowWriteRepository(ProfilesDbContext dbContext) : IWriteRepository<Follow>
+public class FollowWriteRepository(ProfilesDbContext dbContext) : IWriteRepository<Follow>
 {
     private readonly ProfilesDbContext _dbContext = dbContext;
 

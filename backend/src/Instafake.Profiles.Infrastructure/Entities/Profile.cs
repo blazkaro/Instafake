@@ -1,6 +1,6 @@
 ﻿namespace Instafake.Profiles.Infrastructure.Entities;
 
-internal class Profile
+public class Profile
 {
     public string Id { get; set; }
     public string Name { get; set; }

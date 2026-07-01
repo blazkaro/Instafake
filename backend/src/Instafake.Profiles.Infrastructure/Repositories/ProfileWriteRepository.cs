@@ -5,7 +5,7 @@ using Instafake.Profiles.Infrastructure.Extensions;
 
 namespace Instafake.Profiles.Infrastructure.Repositories;
 
-internal class ProfileWriteRepository(ProfilesDbContext dbContext) : IWriteRepository<Profile>
+public class ProfileWriteRepository(ProfilesDbContext dbContext) : IWriteRepository<Profile>
 {
     private readonly ProfilesDbContext _dbContext = dbContext;
 

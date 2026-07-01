@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 using Wolverine;
 using Wolverine.EntityFrameworkCore;
 using Wolverine.Kafka;
@@ -26,7 +25,8 @@ public static class DependencyInjection
         {
             services.AddDbContextWithWolverineIntegration<ProfilesDbContext>(cfg =>
             {
-                cfg.UseNpgsql(configuration.GetConnectionString("profiles-api-db"));
+                cfg.UseNpgsql(configuration.GetConnectionString("profiles-api-db"))
+                    .UseSnakeCaseNamingConvention(); // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
             });
 
             services.AddScoped<IWriteRepository<Profile>, ProfileWriteRepository>();
@@ -45,7 +45,7 @@ public static class DependencyInjection
                 options.UseRuntimeCompilation();
 
                 options.ConfigureApplication();
-                options.Discovery.IncludeAssembly(Assembly.GetExecutingAssembly());
+                options.Discovery.IncludeAssembly(typeof(DependencyInjection).Assembly);
 
                 options.PersistMessagesWithPostgresql(configuration.GetConnectionString("profiles-api-db"));
                 options.UseEntityFrameworkCoreWolverineManagedMigrations();

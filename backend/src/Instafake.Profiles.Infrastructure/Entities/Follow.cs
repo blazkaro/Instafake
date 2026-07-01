@@ -1,6 +1,6 @@
 ﻿namespace Instafake.Profiles.Infrastructure.Entities;
 
-internal class Follow
+public class Follow
 {
     public Profile Profile { get; set; }
     public string ProfileId { get; set; }

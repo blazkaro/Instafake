@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using Wolverine;
 
 namespace Instafake.Profiles.Application;
@@ -18,7 +17,7 @@ public static class DependencyInjection
     {
         public WolverineOptions ConfigureApplication()
         {
-            options.Discovery.IncludeAssembly(Assembly.GetExecutingAssembly());
+            options.Discovery.IncludeAssembly(typeof(DependencyInjection).Assembly);
             return options;
         }
     }

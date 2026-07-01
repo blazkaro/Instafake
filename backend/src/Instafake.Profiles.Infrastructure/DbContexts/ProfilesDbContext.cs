@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Profiles.Infrastructure.DbContexts;
 
-internal class ProfilesDbContext(DbContextOptions<ProfilesDbContext> options) : DbContext(options)
+public class ProfilesDbContext(DbContextOptions<ProfilesDbContext> options) : DbContext(options)
 {
     public DbSet<Profile> Profiles => Set<Profile>();
     public DbSet<Follow> Follows => Set<Follow>();

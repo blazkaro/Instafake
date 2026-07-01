@@ -8,7 +8,7 @@ using Wolverine.Attributes;
 
 namespace Instafake.Profiles.Infrastructure.QueryHandlers;
 
-internal class GetProfileQueryHandler
+public class GetProfileQueryHandler
 {
     [NonTransactional]
     public async Task<Result<ProfileDto>> Handle(GetProfileQuery request, ProfilesDbContext dbContext, CancellationToken cancellationToken)
