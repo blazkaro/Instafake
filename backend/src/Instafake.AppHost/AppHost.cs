@@ -5,6 +5,10 @@ var builder = DistributedApplication.CreateBuilder(args);
 var kafka = builder.AddKafka("kafka")
     .WithDataVolume();
 
+var npgsql = builder.AddPostgres("postgres")
+    .WithHostPort(5432) // static to preserve the same connection string when restarted
+    .WithDataVolume();
+
 var mssql = builder.AddSqlServer("mssql")
     .WithHostPort(1433) // static to preserve the same connection string when restarted
     .WithDataVolume();
@@ -15,7 +19,7 @@ var postsApi = builder.AddProject<Projects.Instafake_Posts_Api>("instafake-posts
     .WithReference(postsApiDb)
     .WaitFor(kafka)
     .WaitFor(postsApiDb)
-    .WithKafkaEnvironment(kafka);
+    .WithKafkaHostEnvironment(kafka);
 
 postsApi.AddEFMigrations("posts-api-migrations", "PostsDbContext")
     .WithMigrationsProject("../Instafake.Posts.Infrastructure")
@@ -27,7 +31,7 @@ var identityEventsIngress = builder.AddProject<Projects.Instafake_IdentityEvents
     .WithExternalHttpEndpoints()
     .WithReference(kafka)
     .WaitFor(kafka)
-    .WithKafkaEnvironment(kafka);
+    .WithKafkaHostEnvironment(kafka);
 
 builder.AddDevTunnel("tunnel")
     .WithReference(identityEventsIngress)
@@ -58,6 +62,22 @@ var multimediaApi = builder.AddProject<Projects.Instafake_Multimedia>("instafake
         }
     });
 
+var profilesApiDb = npgsql.AddDatabase("profiles-api-db");
+var profilesApi = builder.AddProject<Projects.Instafake_Profiles_Api>("instafake-profiles-api")
+    .WithReference(kafka)
+    .WithReference(profilesApiDb)
+    .WaitFor(kafka)
+    .WaitFor(profilesApiDb)
+    .WithKafkaHostEnvironment(kafka);
+
+// manages migrations on its own
+/*
+profilesApi.AddEFMigrations("profiles-api-migrations", "ProfilesDbContext")
+    .WithMigrationsProject("../Instafake.Profiles.Infrastructure")
+    .WithReference(profilesApi)
+    .WaitFor(profilesApi)
+    .RunDatabaseUpdateOnStart();
+*/
 var frontend = builder.AddViteApp("instafake-frontend", "../../../frontend", "start");
 
 bool frontendHttps = frontend.Resource.Annotations.OfType<EndpointAnnotation>().Any(p => p.Name == "https");
