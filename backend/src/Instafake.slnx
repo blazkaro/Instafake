@@ -5,6 +5,10 @@
     <Project Path="Instafake.Multimedia/Instafake.Multimedia.csproj" />
     <Project Path="Instafake.ServiceDefaults/Instafake.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="Instafake.BuildingBlocks.Application/Instafake.BuildingBlocks.Application.csproj" Id="ecd1fbee-c6cd-4314-b924-78963ddcfe53" />
+    <Project Path="Instafake.BuildingBlocks.Domain/Instafake.BuildingBlocks.Domain.csproj" Id="a13ac1d7-6cbc-4e02-9ca8-bff7af9e691e" />
+  </Folder>
   <Folder Name="/src/ExternalEvents/">
     <Project Path="Instafake.IdentityEventsIngress/Instafake.IdentityEventsIngress.csproj" />
   </Folder>
@@ -13,5 +17,11 @@
     <Project Path="Instafake.Posts.Application/Instafake.Posts.Application.csproj" Id="8ac75fc6-8953-4ebd-9776-22c900b2d4d9" />
     <Project Path="Instafake.Posts.Domain/Instafake.Posts.Domain.csproj" Id="df8c866c-70dc-4e72-b2b1-93736d21d498" />
     <Project Path="Instafake.Posts.Infrastructure/Instafake.Posts.Infrastructure.csproj" Id="5d3d7b8f-40a2-48aa-ab22-cc6276f3f3d6" />
+  </Folder>
+  <Folder Name="/src/Profiles/">
+    <Project Path="Instafake.Profiles.Api/Instafake.Profiles.Api.csproj" />
+    <Project Path="Instafake.Profiles.Application/Instafake.Profiles.Application.csproj" Id="ec1bd967-4678-4e92-a502-0333c3d1f1d6" />
+    <Project Path="Instafake.Profiles.Domain/Instafake.Profiles.Domain.csproj" Id="8112d3e8-1e3a-45a0-b254-4fa2fdd789aa" />
+    <Project Path="Instafake.Profiles.Infrastructure/Instafake.Profiles.Infrastructure.csproj" Id="baa15be0-957b-4090-ac3c-e96a5ec9dfea" />
   </Folder>
 </Solution>
