@@ -50,6 +50,8 @@ public static class DependencyInjection
                 options.PersistMessagesWithPostgresql(configuration.GetConnectionString("profiles-api-db"));
                 options.UseEntityFrameworkCoreWolverineManagedMigrations();
 
+                options.Policies.AutoApplyTransactions();
+
                 options.UseEntityFrameworkCoreTransactions();
 
                 var kafkaHost = configuration.GetRequiredSection("Kafka:Host").Get<ConsumerConfig>()!;
