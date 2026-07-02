@@ -83,6 +83,10 @@ public static class DependencyInjection
                             cfg.Set(keyPair.Key, keyPair.Value);
                         }
                     }).UseDurableInbox();
+
+                options.PublishMessage<PostCreatedEvent>()
+                    .ToKafkaTopic("post-events")
+                    .UseDurableOutbox();
             });
 
             builder.UseResourceSetupOnStartup();
