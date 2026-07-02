@@ -1,6 +1,6 @@
 ﻿namespace Instafake.Posts.Infrastructure.Entities;
 
-internal class PostTag
+public class PostTag
 {
     public Guid Id { get; set; }
     public Guid PostId { get; set; }

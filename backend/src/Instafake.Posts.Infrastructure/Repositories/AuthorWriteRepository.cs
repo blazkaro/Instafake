@@ -5,9 +5,15 @@ using Instafake.Posts.Infrastructure.Extensions;
 
 namespace Instafake.Posts.Infrastructure.Repositories;
 
-internal class AuthorWriteRepository(PostsDbContext dbContext) : WriteRepositoryBase<Infrastructure.Entities.User, PostsDbContext>(dbContext), IWriteRepository<Domain.Entities.Author>
+public class AuthorWriteRepository(PostsDbContext dbContext) : IWriteRepository<Domain.Entities.Author>
 {
     public Task DeleteAsync(Author author, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-    public async Task SaveAsync(Author author, CancellationToken cancellationToken = default) => await SaveAsync(author.ToEntity(), cancellationToken);
-    public async Task UpdateAsync(Author author, CancellationToken cancellationToken = default) => await UpdateAsync(author.ToEntity(), cancellationToken);
+
+    public Task InsertAsync(Author author, CancellationToken cancellationToken = default)
+    {
+        dbContext.Users.Add(author.ToEntity());
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateAsync(Author author, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 }

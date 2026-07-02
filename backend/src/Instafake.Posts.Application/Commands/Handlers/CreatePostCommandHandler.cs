@@ -1,14 +1,13 @@
-﻿using Instafake.Posts.Application.Repositories;
+﻿using FluentResults;
+using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Entities;
-using MediatR;
+using Wolverine;
 
 namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class CreatePostCommandHandler(IWriteRepository<Post> repo, IPublisher publisher) : CommandHandlerBase<Post>(publisher), IRequestHandler<CreatePostCommand, Guid>
+public class CreatePostCommandHandler
 {
-    private readonly IWriteRepository<Post> _repo = repo;
-
-    public async Task<Guid> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<(Result<Guid> Result, OutgoingMessages)> Handle(CreatePostCommand request, IWriteRepository<Post> repo, CancellationToken cancellationToken)
     {
         var post = new Domain.Entities.Post()
         {
@@ -21,7 +20,8 @@ internal class CreatePostCommandHandler(IWriteRepository<Post> repo, IPublisher 
         post.AddMultimedia(request.MultimediaUrls);
         post.AddTag(request.Tags);
 
-        await _repo.SaveAsync(post, cancellationToken);
-        return post.Id;
+        await repo.InsertAsync(post, cancellationToken);
+
+        return (Result.Ok(post.Id), new OutgoingMessages(post.Events));
     }
 }

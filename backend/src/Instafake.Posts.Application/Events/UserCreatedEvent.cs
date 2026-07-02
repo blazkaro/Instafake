@@ -1,11 +1,10 @@
-﻿using MediatR;
+﻿using Wolverine.Attributes;
 
 namespace Instafake.Posts.Application.Events;
 
-public class AuthorCreatedEvent : INotification
+[MessageIdentity("user.created")]
+public class UserCreatedEvent
 {
-    public string EventType { get; set; }
-    public string EventId { get; set; }
     public string UserId { get; set; }
     public string UserName { get; set; }
     public string AvatarUrl { get; set; }

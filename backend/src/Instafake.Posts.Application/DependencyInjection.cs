@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Wolverine;
 
 namespace Instafake.Posts.Application;
 
@@ -8,12 +9,16 @@ public static class DependencyInjection
     {
         public IServiceCollection AddApplicationServices()
         {
-            services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
-            });
-
             return services;
+        }
+    }
+
+    extension(WolverineOptions options)
+    {
+        public WolverineOptions ConfigureApplication()
+        {
+            options.Discovery.IncludeAssembly(typeof(DependencyInjection).Assembly);
+            return options;
         }
     }
 }

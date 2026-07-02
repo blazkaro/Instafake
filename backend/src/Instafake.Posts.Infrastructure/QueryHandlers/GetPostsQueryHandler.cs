@@ -1,21 +1,21 @@
-﻿using Instafake.Posts.Application.Queries;
+﻿using FluentResults;
+using Instafake.Posts.Application.Queries;
 using Instafake.Posts.Application.Queries.Dtos;
 using Instafake.Posts.Application.Queries.Pagination;
 using Instafake.Posts.Infrastructure.DbContexts;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Wolverine.Attributes;
 
 namespace Instafake.Posts.Infrastructure.QueryHandlers;
 
-internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetPostsQuery, PaginationResult<IReadOnlyList<PostDto>>>
+public class GetPostsQueryHandler
 {
-    private readonly PostsDbContext _dbContext = dbContext;
-
     private const int FALLBACK_PAGE_SIZE = 20;
 
-    public async Task<PaginationResult<IReadOnlyList<PostDto>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    [NonTransactional]
+    public async Task<Result<PaginationResult<PostDto>>> Handle(GetPostsQuery request, PostsDbContext dbContext, CancellationToken cancellationToken)
     {
-        var query = _dbContext.Posts.AsNoTracking();
+        var query = dbContext.Posts.AsNoTracking();
 
         if (!string.IsNullOrEmpty(request.AuthorName))
             query = query.Where(p => p.Author.Name == request.AuthorName);
@@ -52,11 +52,11 @@ internal class GetPostsQueryHandler(PostsDbContext dbContext) : IRequestHandler<
             LastItemCreatedAt = lastPost.CreatedAt
         } : null;
 
-        return new()
+        return Result.Ok(new PaginationResult<PostDto>
         {
-            Result = posts,
+            Items = posts,
             PageSize = Math.Min(pageSize, posts.Count),
             NextCursor = nextCursor,
-        };
+        });
     }
 }

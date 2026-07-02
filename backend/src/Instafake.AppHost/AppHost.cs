@@ -20,12 +20,13 @@ var postsApi = builder.AddProject<Projects.Instafake_Posts_Api>("instafake-posts
     .WaitFor(kafka)
     .WaitFor(postsApiDb)
     .WithKafkaHostEnvironment(kafka);
-
+/*
 postsApi.AddEFMigrations("posts-api-migrations", "PostsDbContext")
     .WithMigrationsProject("../Instafake.Posts.Infrastructure")
     .WithReference(postsApi)
     .WaitFor(postsApi)
     .RunDatabaseUpdateOnStart();
+*/
 
 var identityEventsIngressDb = npgsql.AddDatabase("identity-events-ingress-api-db");
 var identityEventsIngress = builder.AddProject<Projects.Instafake_IdentityEventsIngress>("instafake-identityeventsingress")

@@ -1,19 +1,15 @@
-﻿using Instafake.Posts.Application.Events;
-using Instafake.Posts.Domain.Events;
+﻿using Instafake.Posts.Domain.Events;
 using Instafake.Posts.Infrastructure.DbContexts;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Posts.Infrastructure.Events.Handlers;
 
-internal class PostLikeCreatedEventHandler(PostsDbContext dbContext) : INotificationHandler<DomainEventNotification<PostLikeCreatedEvent>>
+public class PostLikeCreatedEventHandler
 {
-    private readonly PostsDbContext _dbContext = dbContext;
-
-    public async Task Handle(DomainEventNotification<PostLikeCreatedEvent> notification, CancellationToken cancellationToken)
+    public async Task Handle(PostLikeCreatedEvent ev, PostsDbContext dbContext, CancellationToken cancellationToken)
     {
-        await _dbContext.Posts
-            .Where(post => post.Id == notification.Event.PostId)
+        await dbContext.Posts
+            .Where(post => post.Id == ev.PostId)
             .ExecuteUpdateAsync(setters => setters
             .SetProperty(p => p.LikesCount, p => p.LikesCount + 1),
             cancellationToken);

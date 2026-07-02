@@ -1,6 +1,6 @@
 ﻿namespace Instafake.Posts.Infrastructure.Entities;
 
-internal class Post
+public class Post
 {
     public Guid Id { get; set; }
     public string AuthorId { get; set; }

@@ -2,7 +2,7 @@
 
 public class PaginationResult<TResult>
 {
-    public TResult Result { get; set; }
+    public ICollection<TResult> Items { get; set; }
     public int PageSize { get; set; }
     public CursorPagination? NextCursor { get; set; }
 }

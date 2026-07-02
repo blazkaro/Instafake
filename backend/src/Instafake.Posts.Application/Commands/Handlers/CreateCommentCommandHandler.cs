@@ -1,15 +1,14 @@
-﻿using Instafake.Posts.Application.Repositories;
+﻿using FluentResults;
+using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Entities;
 using Instafake.Posts.Domain.Events;
-using MediatR;
+using Wolverine;
 
 namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo, IPublisher publisher) : CommandHandlerBase<Comment>(publisher), IRequestHandler<CreateCommentCommand, Guid>
+public class CreateCommentCommandHandler
 {
-    private readonly IWriteRepository<Comment> _repo = repo;
-
-    public async Task<Guid> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+    public async Task<(Result<Guid> Result, OutgoingMessages)> Handle(CreateCommentCommand request, IWriteRepository<Comment> repo, CancellationToken cancellationToken)
     {
         var comment = new Domain.Entities.Comment
         {
@@ -20,11 +19,9 @@ internal class CreateCommentCommandHandler(IWriteRepository<Comment> repo, IPubl
             CreatedAt = DateTime.UtcNow
         };
 
-        await _repo.SaveAsync(comment, cancellationToken);
-
+        await repo.InsertAsync(comment, cancellationToken);
         comment.AddEvent(new CommentCreatedEvent(comment.PostId, comment.Id));
-        await DispatchEvents(comment);
 
-        return comment.Id;
+        return (Result.Ok(comment.Id), new OutgoingMessages(comment.Events));
     }
 }

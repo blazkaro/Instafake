@@ -1,37 +1,27 @@
-﻿using Instafake.Posts.Application.Repositories;
+﻿using FluentResults;
+using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Entities;
 using Instafake.Posts.Domain.Events;
-using MediatR;
+using Wolverine;
 
 namespace Instafake.Posts.Application.Commands.Handlers;
 
-internal class UpdateLikeCommandHandler(IWriteRepository<PostLike> repo, IPublisher publisher) : CommandHandlerBase<PostLike>(publisher), IRequestHandler<UpdateLikeCommand, bool>
+public class UpdateLikeCommandHandler
 {
-    private readonly IWriteRepository<PostLike> _repo = repo;
-
-    public async Task<bool> Handle(UpdateLikeCommand request, CancellationToken cancellationToken)
+    public async Task<(Result Result, OutgoingMessages)> Handle(UpdateLikeCommand request, IWriteRepository<PostLike> repo, CancellationToken cancellationToken)
     {
         var like = new PostLike { UserId = request.UserId, PostId = request.PostId };
-        try
+        if (request.Like)
         {
-            if (request.Like)
-            {
-                await _repo.SaveAsync(like, cancellationToken);
-                like.AddEvent(new PostLikeCreatedEvent(like.PostId, like.UserId));
-            }
-            else
-            {
-                await _repo.DeleteAsync(like, cancellationToken);
-                like.AddEvent(new PostLikeDeletedEvent(like.PostId, like.UserId));
-            }
+            await repo.InsertAsync(like, cancellationToken);
+            like.AddEvent(new PostLikeCreatedEvent(like.PostId, like.UserId));
         }
-        catch
+        else
         {
-            await DispatchEvents(like);
-            return false;
+            await repo.DeleteAsync(like, cancellationToken);
+            like.AddEvent(new PostLikeDeletedEvent(like.PostId, like.UserId));
         }
 
-        await DispatchEvents(like);
-        return true;
+        return (Result.Ok(), new OutgoingMessages(like.Events));
     }
 }

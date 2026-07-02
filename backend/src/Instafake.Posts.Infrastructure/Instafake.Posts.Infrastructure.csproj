@@ -27,6 +27,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.8" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" Version="6.16.0" />
+    <PackageReference Include="WolverineFx.Kafka" Version="6.16.0" />
+    <PackageReference Include="WolverineFx.RuntimeCompilation" Version="6.16.0" />
+    <PackageReference Include="WolverineFx.SqlServer" Version="6.16.0" />
   </ItemGroup>
 
 </Project>

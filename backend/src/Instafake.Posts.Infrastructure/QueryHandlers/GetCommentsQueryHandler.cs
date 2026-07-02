@@ -1,21 +1,21 @@
-﻿using Instafake.Posts.Application.Queries;
+﻿using FluentResults;
+using Instafake.Posts.Application.Queries;
 using Instafake.Posts.Application.Queries.Dtos;
 using Instafake.Posts.Application.Queries.Pagination;
 using Instafake.Posts.Infrastructure.DbContexts;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Wolverine.Attributes;
 
 namespace Instafake.Posts.Infrastructure.QueryHandlers;
 
-internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandler<GetCommentsQuery, PaginationResult<IReadOnlyCollection<CommentDto>>>
+public class GetCommentsQueryHandler
 {
-    private readonly PostsDbContext _dbContext = dbContext;
-
     const int FALLBACK_PAGE_SIZE = 50;
 
-    public async Task<PaginationResult<IReadOnlyCollection<CommentDto>>> Handle(GetCommentsQuery request, CancellationToken cancellationToken)
+    [NonTransactional]
+    public async Task<Result<PaginationResult<CommentDto>>> Handle(GetCommentsQuery request, PostsDbContext dbContext, CancellationToken cancellationToken)
     {
-        var query = _dbContext.Comments.AsNoTracking()
+        var query = dbContext.Comments.AsNoTracking()
             .Where(p => p.PostId == request.PostId);
 
         if (request.Pagination?.Cursor is not null && Guid.TryParse(request.Pagination.Cursor.Id, out var cursorId))
@@ -42,11 +42,11 @@ internal class GetCommentsQueryHandler(PostsDbContext dbContext) : IRequestHandl
             LastItemCreatedAt = lastComment.CreatedAt
         } : null;
 
-        return new()
+        return Result.Ok(new PaginationResult<CommentDto>
         {
-            Result = comments,
+            Items = comments,
             PageSize = Math.Min(pageSize, comments.Count),
             NextCursor = nextCursor
-        };
+        });
     }
 }

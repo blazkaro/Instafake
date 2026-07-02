@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instafake.Posts.Infrastructure.DbContexts;
 
-internal class PostsDbContext(DbContextOptions<PostsDbContext> options) : DbContext(options)
+public class PostsDbContext(DbContextOptions<PostsDbContext> options) : DbContext(options)
 {
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<PostComment> Comments => Set<PostComment>();

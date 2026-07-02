@@ -1,17 +1,19 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using FluentResults;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Instafake.Posts.Api.Extensions;
 using Instafake.Posts.Api.Protos;
 using Instafake.Posts.Application.Commands;
 using Instafake.Posts.Application.Queries;
 using Instafake.Posts.Application.Queries.Dtos;
-using MediatR;
+using Instafake.Posts.Application.Queries.Pagination;
+using Wolverine;
 
 namespace Instafake.Posts.Api.Services;
 
-public class PosterService(IMediator mediator) : Poster.PosterBase
+public class PosterService(IMessageBus bus) : Poster.PosterBase
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly IMessageBus _bus = bus;
 
     public override async Task<CreateCommentReply> CreateComment(CreateCommentRequest request, ServerCallContext context)
     {
@@ -21,35 +23,48 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
             throw new RpcException(new Status(StatusCode.NotFound, "Invalid post id"));
         }
 
-        var commentId = await _mediator.Send(new CreateCommentCommand(userId, postId, request.Content));
-        return new CreateCommentReply { Id = commentId.ToString() };
+        var result = await _bus.InvokeAsync<Result<Guid>>(new CreateCommentCommand(userId, postId, request.Content), context.CancellationToken);
+        if (result.IsFailed)
+            throw new RpcException(result.ToGrpcStatus());
+
+        return new CreateCommentReply { Id = result.Value.ToString() };
     }
 
     public override async Task<CreatePostReply> CreatePost(CreatePostRequest request, ServerCallContext context)
     {
         var userId = context.GetAccessTokenSubject()!;
-        var postId = await _mediator.Send(new CreatePostCommand(userId, request.Description, [.. request.MultimediaUrls], [.. request.Tags]), context.CancellationToken);
-        return new CreatePostReply { Id = postId.ToString() };
+        var result = await _bus.InvokeAsync<Result<Guid>>(new CreatePostCommand(userId, request.Description, [.. request.MultimediaUrls], [.. request.Tags]), context.CancellationToken);
+        if (result.IsFailed)
+            throw new RpcException(result.ToGrpcStatus());
+
+        return new CreatePostReply { Id = result.Value.ToString() };
     }
 
     public override async Task<GetCommentsReply> GetComments(GetCommentsRequest request, ServerCallContext context)
     {
         if (!Guid.TryParse(request.PostId, out var postId))
         {
-            return new GetCommentsReply(); // empty response, invalid post id
+            return new GetCommentsReply(); // empty response, invalid post id format so surely no data
         }
 
-        var commentsPaginated = await _mediator.Send(new GetCommentsQuery(postId, request.Pagination.ToPaginationDto()), context.CancellationToken);
+        var result = await _bus.InvokeAsync<Result<PaginationResult<Application.Queries.Dtos.CommentDto>>>(
+            new GetCommentsQuery(postId, request.Pagination.ToPaginationDto()),
+            context.CancellationToken);
+
+        if (result.IsFailed)
+            throw new RpcException(result.ToGrpcStatus());
+
+        var paginatedResult = result.Value;
         var reply = new GetCommentsReply()
         {
-            Items = { commentsPaginated.Result.Select(comment => new Protos.CommentDto
+            Items = { paginatedResult.Items.Select(comment => new Protos.CommentDto
             {
                 Id = comment.Id,
                 Author = new Protos.Shared.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt.AsUtc().ToTimestamp()
             }) },
-            Pagination = new PaginationDto { PageSize = commentsPaginated.PageSize, Cursor = commentsPaginated.NextCursor }.ToProtoPaginationReply()
+            Pagination = new PaginationDto { PageSize = paginatedResult.PageSize, Cursor = paginatedResult.NextCursor }.ToProtoPaginationReply()
         };
 
         return reply;
@@ -58,10 +73,17 @@ public class PosterService(IMediator mediator) : Poster.PosterBase
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
         var userId = context.GetAccessTokenSubject()!;
-        var postsPaginated = await _mediator.Send(new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()), context.CancellationToken);
+        var result = await _bus.InvokeAsync<Result<PaginationResult<Application.Queries.Dtos.PostDto>>>(
+            new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()),
+            context.CancellationToken);
+
+        if (result.IsFailed)
+            throw new RpcException(result.ToGrpcStatus());
+
+        var postsPaginated = result.Value;
         var reply = new GetPostsReply()
         {
-            Items = { postsPaginated.Result.Select(post => new Protos.PostDto
+            Items = { postsPaginated.Items.Select(post => new Protos.PostDto
             {
                 Id = post.Id,
                 Author = new Protos.Shared.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
