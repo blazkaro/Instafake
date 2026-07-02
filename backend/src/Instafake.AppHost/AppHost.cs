@@ -27,10 +27,13 @@ postsApi.AddEFMigrations("posts-api-migrations", "PostsDbContext")
     .WaitFor(postsApi)
     .RunDatabaseUpdateOnStart();
 
+var identityEventsIngressDb = npgsql.AddDatabase("identity-events-ingress-api-db");
 var identityEventsIngress = builder.AddProject<Projects.Instafake_IdentityEventsIngress>("instafake-identityeventsingress")
     .WithExternalHttpEndpoints()
     .WithReference(kafka)
+    .WithReference(identityEventsIngressDb)
     .WaitFor(kafka)
+    .WaitFor(identityEventsIngressDb)
     .WithKafkaHostEnvironment(kafka);
 
 builder.AddDevTunnel("tunnel")
