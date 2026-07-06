@@ -19,7 +19,7 @@ public class Auth0EventsController(IMessageBus bus) : ControllerBase
     {
         var identityEvent = new UserCreatedEvent
         {
-            UserId = ev.Data.Object.UserId,
+            IdpUserId = ev.Data.Object.UserId,
             UserName = ev.Data.Object.Nickname,
             AvatarUrl = ev.Data.Object.Picture,
             CreatedAt = ev.Data.Object.CreatedAt!.Value
