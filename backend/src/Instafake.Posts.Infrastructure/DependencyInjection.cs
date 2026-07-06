@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Instafake.Posts.Application;
+using Instafake.Posts.Application.Events.Integration;
 using Instafake.Posts.Application.Repositories;
 using Instafake.Posts.Domain.Events;
 using Instafake.Posts.Infrastructure.DbContexts;
@@ -84,7 +85,7 @@ public static class DependencyInjection
                         }
                     }).UseDurableInbox();
 
-                options.PublishMessage<PostCreatedEvent>()
+                options.PublishMessage<PostCreatedIntegrationEvent>()
                     .ToKafkaTopic("post-events")
                     .UseDurableOutbox();
             });

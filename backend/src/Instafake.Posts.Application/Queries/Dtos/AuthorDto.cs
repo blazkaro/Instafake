@@ -1,5 +1,5 @@
 ﻿namespace Instafake.Posts.Application.Queries.Dtos;
 
-public record AuthorDto(string Id, string Name, string AvatarUrl)
+public record AuthorDto(Guid Id, string Name, string AvatarUrl)
 {
 }

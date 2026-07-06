@@ -12,7 +12,7 @@ public static class ServerCallContextExtensions
         /// </summary>
         /// <returns>The subject</returns>
         /// <exception cref="AuthenticationException"></exception>
-        public string? GetAccessTokenSubject()
+        public Guid? GetAccessTokenSubject()
         {
             return context.GetHttpContext().GetAccessTokenSubject();
         }

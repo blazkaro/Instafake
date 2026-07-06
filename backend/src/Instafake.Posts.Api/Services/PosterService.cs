@@ -17,7 +17,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<CreateCommentReply> CreateComment(CreateCommentRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!;
+        var userId = context.GetAccessTokenSubject()!.Value;
         if (!Guid.TryParse(request.PostId, out var postId))
         {
             throw new RpcException(new Status(StatusCode.NotFound, "Invalid post id"));
@@ -32,7 +32,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<CreatePostReply> CreatePost(CreatePostRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!;
+        var userId = context.GetAccessTokenSubject()!.Value;
         var result = await _bus.InvokeAsync<Result<Guid>>(new CreatePostCommand(userId, request.Description, [.. request.MultimediaUrls], [.. request.Tags]), context.CancellationToken);
         if (result.IsFailed)
             throw new RpcException(result.ToGrpcStatus());
@@ -60,7 +60,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
             Items = { paginatedResult.Items.Select(comment => new Protos.CommentDto
             {
                 Id = comment.Id,
-                Author = new Protos.Shared.AuthorDto { Id = comment.Author.Id, Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
+                Author = new Protos.Shared.AuthorDto { Id = comment.Author.Id.ToString(), Name = comment.Author.Name, AvatarUrl = comment.Author.AvatarUrl },
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt.AsUtc().ToTimestamp()
             }) },
@@ -72,7 +72,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!;
+        var userId = context.GetAccessTokenSubject()!.Value;
         var result = await _bus.InvokeAsync<Result<PaginationResult<Application.Queries.Dtos.PostDto>>>(
             new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()),
             context.CancellationToken);
@@ -86,7 +86,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
             Items = { postsPaginated.Items.Select(post => new Protos.PostDto
             {
                 Id = post.Id,
-                Author = new Protos.Shared.AuthorDto { Id = post.Author.Id, Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
+                Author = new Protos.Shared.AuthorDto { Id = post.Author.Id.ToString(), Name = post.Author.Name, AvatarUrl = post.Author.AvatarUrl },
                 Description = post.Description,
                 MultimediaUrls = { post.MultimediaUrls },
                 Tags = { post.Tags },

@@ -3,7 +3,7 @@
 public class Post
 {
     public Guid Id { get; set; }
-    public string AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
     public User Author { get; set; }
     public List<string> MultimediaUrls { get; set; } = [];
     public string Description { get; set; }

@@ -20,7 +20,7 @@ public class LikesController(IMessageBus bus) : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update([FromBody, Required] UpdateLikeDto dto, CancellationToken cancellationToken)
     {
-        var userId = HttpContext.GetAccessTokenSubject()!;
+        var userId = HttpContext.GetAccessTokenSubject()!.Value;
         var result = await _bus.InvokeAsync<Result>(new UpdateLikeCommand(dto.Like!.Value, dto.PostId!.Value, userId), cancellationToken);
         if (result.IsFailed)
         {
