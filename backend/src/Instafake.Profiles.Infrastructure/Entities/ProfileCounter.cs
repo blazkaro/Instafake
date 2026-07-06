@@ -1,10 +1,8 @@
 ﻿namespace Instafake.Profiles.Infrastructure.Entities;
 
-public class Follow
+public class ProfileCounter
 {
     public Profile Profile { get; set; }
     public Guid ProfileId { get; set; }
-    public Guid FollowerId { get; set; }
-    public long Seq { get; set; }
-    public int BucketId { get; set; }
+    public long NextSeq { get; set; }
 }

@@ -1,10 +1,12 @@
 ﻿using Confluent.Kafka;
 using Instafake.Profiles.Application;
+using Instafake.Profiles.Application.Options;
 using Instafake.Profiles.Application.Repositories;
-using Instafake.Profiles.Domain.Entities;
 using Instafake.Profiles.Domain.Events;
 using Instafake.Profiles.Infrastructure.DbContexts;
+using Instafake.Profiles.Infrastructure.Events.Self;
 using Instafake.Profiles.Infrastructure.Repositories;
+using Instafake.Profiles.Infrastructure.Services;
 using JasperFx.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,14 +25,24 @@ public static class DependencyInjection
     {
         public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
         {
-            services.AddDbContextWithWolverineIntegration<ProfilesDbContext>(cfg =>
+            Action<DbContextOptionsBuilder> configureDb = cfg =>
             {
                 cfg.UseNpgsql(configuration.GetConnectionString("profiles-api-db"))
-                    .UseSnakeCaseNamingConvention(); // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
-            });
+                   .UseSnakeCaseNamingConvention(); // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
+            };
 
-            services.AddScoped<IWriteRepository<Profile>, ProfileWriteRepository>();
-            services.AddScoped<IWriteRepository<Follow>, FollowWriteRepository>();
+            services.AddDbContextWithWolverineIntegration<ProfilesDbContext>(configureDb);
+            services.AddDbContextFactory<ProfilesDbContext>(configureDb);
+
+            services.AddScoped<IWriteRepository<Domain.Entities.Profile>, ProfileWriteRepository>();
+            services.AddScoped<IWriteRepository<Domain.Entities.Follow>, FollowWriteRepository>();
+
+            services.AddSingleton<IProfileSequenceAllocator, ProfileSequenceAllocator>();
+
+            services.Configure<FollowBucketOptions>(cfg =>
+            {
+                cfg.BucketSize = 5000;
+            });
 
             return services;
         }
@@ -59,10 +71,13 @@ public static class DependencyInjection
 
                 var kafkaDefaultConsumer = configuration.GetSection("Kafka:Consumers:Default").Get<ConsumerConfig>() ?? new ConsumerConfig();
 
-                var usersConsumer = new ConsumerConfig(kafkaDefaultConsumer);
-                configuration.GetSection("Kafka:Consumers:Users").Bind(usersConsumer);
-
                 options.LocalQueue("follow-events");
+
+                options.LocalQueue("profile-events")
+                    .UseDurableInbox();
+
+                options.PublishMessage<ProfileCreatedEvent>()
+                    .ToLocalQueue("profile-events");
 
                 options.PublishMessage<FollowCreatedEvent>()
                     .ToLocalQueue("follow-events");
@@ -70,10 +85,41 @@ public static class DependencyInjection
                 options.PublishMessage<FollowDeletedEvent>()
                     .ToLocalQueue("follow-events");
 
+                options.PublishMessage<NotificationFanoutNext>()
+                    .ToKafkaTopic("post-notifications")
+                    .UseDurableOutbox();
+
+                var usersConsumer = new ConsumerConfig(kafkaDefaultConsumer);
+                configuration.GetSection("Kafka:Consumers:Users").Bind(usersConsumer);
+
                 options.ListenToKafkaTopic("users")
                     .ConfigureConsumer(cfg =>
                     {
                         foreach (var keyPair in usersConsumer)
+                        {
+                            cfg.Set(keyPair.Key, keyPair.Value);
+                        }
+                    }).UseDurableInbox();
+
+                var postsConsumer = new ConsumerConfig(kafkaDefaultConsumer);
+                configuration.GetSection("Kafka:Consumers:Posts").Bind(postsConsumer);
+
+                options.ListenToKafkaTopic("post-events")
+                    .ConfigureConsumer(cfg =>
+                    {
+                        foreach (var keyPair in postsConsumer)
+                        {
+                            cfg.Set(keyPair.Key, keyPair.Value);
+                        }
+                    }).UseDurableInbox();
+
+                var postNotificationsConsumer = new ConsumerConfig(kafkaDefaultConsumer);
+                configuration.GetSection("Kafka:Consumers:PostNotifications").Bind(postNotificationsConsumer);
+
+                options.ListenToKafkaTopic("post-notifications")
+                    .ConfigureConsumer(cfg =>
+                    {
+                        foreach (var keyPair in postNotificationsConsumer)
                         {
                             cfg.Set(keyPair.Key, keyPair.Value);
                         }

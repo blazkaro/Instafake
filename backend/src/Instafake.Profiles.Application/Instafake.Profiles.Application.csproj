@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Events\Outgoing\" />
+	  <Folder Include="Integration\Dtos\" />
 	</ItemGroup>
 
 </Project>

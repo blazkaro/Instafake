@@ -12,13 +12,16 @@ public static class HttpContextExtensions
         /// </summary>
         /// <returns>The subject</returns>
         /// <exception cref="AuthenticationException"></exception>
-        public string? GetAccessTokenSubject()
+        public Guid? GetAccessTokenSubject()
         {
             if (httpContext.User.Identity is null || !httpContext.User.Identity.IsAuthenticated)
                 throw new AuthenticationException("Request is not authenticated.");
 
             var sub = httpContext.User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
-            return sub;
+            if (!Guid.TryParse(sub, out var subId))
+                return null;
+
+            return subId;
         }
     }
 }

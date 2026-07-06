@@ -18,5 +18,9 @@ internal class ProfileConfiguration : IEntityTypeConfiguration<Profile>
         builder
             .HasMany(profile => profile.Follows)
             .WithOne(follow => follow.Profile);
+
+        builder
+            .HasOne(profile => profile.ProfileCounter)
+            .WithOne(pc => pc.Profile);
     }
 }

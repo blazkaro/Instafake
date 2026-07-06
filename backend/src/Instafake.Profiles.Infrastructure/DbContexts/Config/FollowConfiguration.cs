@@ -9,7 +9,11 @@ internal class FollowConfiguration : IEntityTypeConfiguration<Follow>
     public void Configure(EntityTypeBuilder<Follow> builder)
     {
         builder
-            .HasKey(follow => new { follow.ProfileId, follow.FollowerId });
+            .HasKey(follow => new { follow.ProfileId, follow.BucketId, follow.Seq });
+
+        builder
+            .HasIndex(follow => new { follow.ProfileId, follow.FollowerId })
+            .IsUnique();
 
         builder
             .HasOne(follow => follow.Profile)

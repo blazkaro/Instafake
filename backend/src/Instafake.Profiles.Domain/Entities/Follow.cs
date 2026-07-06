@@ -2,6 +2,6 @@
 
 public class Follow : DomainEntity
 {
-    public string ProfileId { get; set; }
-    public string FollowerId { get; set; }
+    public Guid ProfileId { get; set; }
+    public Guid FollowerId { get; set; }
 }
