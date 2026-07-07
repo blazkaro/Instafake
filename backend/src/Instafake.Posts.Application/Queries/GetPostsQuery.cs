@@ -2,6 +2,6 @@
 
 namespace Instafake.Posts.Application.Queries;
 
-public record GetPostsQuery(Guid UserId, string? AuthorName, string?[] Tags, PaginationDto? Pagination)
+public record GetPostsQuery(string UserId, string? AuthorName, string?[] Tags, PaginationDto? Pagination)
 {
 }

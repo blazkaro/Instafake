@@ -6,7 +6,7 @@ public class Post : DomainEntity
     private readonly HashSet<string> _tags = [];
 
     public Guid Id { get; init; } = Guid.NewGuid();
-    public Guid AuthorId { get; init; }
+    public string AuthorId { get; init; }
     public string Description { get; init; }
     public DateTime CreatedAt { get; init; }
     public IReadOnlyCollection<string> MultimediaUrls => _multimediaUrls.AsReadOnly();

@@ -17,7 +17,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<CreateCommentReply> CreateComment(CreateCommentRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!.Value;
+        var userId = context.GetAccessTokenSubject()!;
         if (!Guid.TryParse(request.PostId, out var postId))
         {
             throw new RpcException(new Status(StatusCode.NotFound, "Invalid post id"));
@@ -32,7 +32,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<CreatePostReply> CreatePost(CreatePostRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!.Value;
+        var userId = context.GetAccessTokenSubject()!;
         var result = await _bus.InvokeAsync<Result<Guid>>(new CreatePostCommand(userId, request.Description, [.. request.MultimediaUrls], [.. request.Tags]), context.CancellationToken);
         if (result.IsFailed)
             throw new RpcException(result.ToGrpcStatus());
@@ -72,7 +72,7 @@ public class PosterService(IMessageBus bus) : Poster.PosterBase
 
     public override async Task<GetPostsReply> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
-        var userId = context.GetAccessTokenSubject()!.Value;
+        var userId = context.GetAccessTokenSubject()!;
         var result = await _bus.InvokeAsync<Result<PaginationResult<Application.Queries.Dtos.PostDto>>>(
             new GetPostsQuery(userId, request.AuthorName, [.. request.Tags], request.Pagination.ToPaginationDto()),
             context.CancellationToken);
