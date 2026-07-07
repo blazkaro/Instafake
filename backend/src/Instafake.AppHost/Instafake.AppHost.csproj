@@ -22,6 +22,7 @@
 		<ProjectReference Include="..\Instafake.BFF\Instafake.BFF.csproj" />
 		<ProjectReference Include="..\Instafake.IdentityEventsIngress\Instafake.IdentityEventsIngress.csproj" />
 		<ProjectReference Include="..\Instafake.Multimedia\Instafake.Multimedia.csproj" />
+		<ProjectReference Include="..\Instafake.Notifications\Instafake.Notifications.csproj" />
 		<ProjectReference Include="..\Instafake.Posts.Api\Instafake.Posts.Api.csproj" />
 		<ProjectReference Include="..\Instafake.Posts.Infrastructure\Instafake.Posts.Infrastructure.csproj" IsAspireProjectResource="false" />
 		<ProjectReference Include="..\Instafake.Profiles.Api\Instafake.Profiles.Api.csproj" />

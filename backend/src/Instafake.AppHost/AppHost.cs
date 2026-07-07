@@ -82,6 +82,15 @@ profilesApi.AddEFMigrations("profiles-api-migrations", "ProfilesDbContext")
     .WaitFor(profilesApi)
     .RunDatabaseUpdateOnStart();
 */
+
+var notificationsDb = npgsql.AddDatabase("notifications-db");
+var notifications = builder.AddProject<Projects.Instafake_Notifications>("instafake-notifications")
+    .WithReference(kafka)
+    .WithReference(notificationsDb)
+    .WaitFor(kafka)
+    .WaitFor(notificationsDb)
+    .WithKafkaHostEnvironment(kafka);
+
 var frontend = builder.AddViteApp("instafake-frontend", "../../../frontend", "start");
 
 bool frontendHttps = frontend.Resource.Annotations.OfType<EndpointAnnotation>().Any(p => p.Name == "https");

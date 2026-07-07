@@ -3,6 +3,7 @@
     <Project Path="Instafake.AppHost/Instafake.AppHost.csproj" />
     <Project Path="Instafake.BFF/Instafake.BFF.csproj" />
     <Project Path="Instafake.Multimedia/Instafake.Multimedia.csproj" />
+    <Project Path="Instafake.Notifications/Instafake.Notifications.csproj" />
     <Project Path="Instafake.ServiceDefaults/Instafake.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/src/BuildingBlocks/">
