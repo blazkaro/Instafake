@@ -1,5 +1,5 @@
 ﻿namespace Instafake.Profiles.Domain.Events;
 
-public record FollowDeletedEvent(Guid ProfileId, Guid FollowerId) : IDomainEvent
+public record FollowDeletedEvent(string ProfileId, string FollowerId) : IDomainEvent
 {
 }

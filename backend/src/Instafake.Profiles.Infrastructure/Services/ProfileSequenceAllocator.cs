@@ -18,10 +18,10 @@ public class ProfileSequenceAllocator(IDbContextFactory<ProfilesDbContext> dbCon
     }
 
     // TODO: cleanup for not used profiles
-    private readonly ConcurrentDictionary<Guid, LeaseBlock> _profileLeaseBlocks = new();
+    private readonly ConcurrentDictionary<string, LeaseBlock> _profileLeaseBlocks = new();
     private const int BLOCK_SIZE = 1000;
 
-    public async Task<long> Next(Guid profileId)
+    public async Task<long> Next(string profileId)
     {
         var lease = _profileLeaseBlocks.GetOrAdd(profileId, _ => new LeaseBlock());
 

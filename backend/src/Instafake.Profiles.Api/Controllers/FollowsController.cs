@@ -21,7 +21,7 @@ public class FollowsController(IMessageBus bus) : ControllerBase
     public async Task<IActionResult> UpdateFollow([FromBody, Required] UpdateFollowDto dto, CancellationToken cancellationToken)
     {
         var userId = HttpContext.GetAccessTokenSubject()!;
-        var result = await _bus.InvokeAsync<Result>(new UpdateFollowCommand(dto.ProfileId!.Value, userId.Value, dto.Follow!.Value), cancellationToken);
+        var result = await _bus.InvokeAsync<Result>(new UpdateFollowCommand(dto.ProfileId!, userId, dto.Follow!.Value), cancellationToken);
         if (result.IsFailed)
         {
             return Conflict(result.Errors);

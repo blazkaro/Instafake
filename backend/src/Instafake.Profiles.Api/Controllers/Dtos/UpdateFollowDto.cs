@@ -5,7 +5,7 @@ namespace Instafake.Profiles.Api.Controllers.Dtos;
 public class UpdateFollowDto
 {
     [Required]
-    public Guid? ProfileId { get; set; }
+    public string? ProfileId { get; set; }
 
     [Required]
     public bool? Follow { get; set; }

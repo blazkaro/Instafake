@@ -15,8 +15,4 @@
 		<PackageReference Include="WolverineFx" Version="6.16.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Integration\Dtos\" />
-	</ItemGroup>
-
 </Project>

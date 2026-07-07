@@ -1,5 +1,5 @@
 ﻿namespace Instafake.Profiles.Domain.Events;
 
-public record ProfileCreatedEvent(Guid ProfileId) : IDomainEvent
+public record ProfileCreatedEvent(string ProfileId) : IDomainEvent
 {
 }

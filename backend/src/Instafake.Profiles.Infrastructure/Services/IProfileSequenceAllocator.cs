@@ -2,5 +2,5 @@
 
 public interface IProfileSequenceAllocator
 {
-    Task<long> Next(Guid profileId);
+    Task<long> Next(string profileId);
 }
