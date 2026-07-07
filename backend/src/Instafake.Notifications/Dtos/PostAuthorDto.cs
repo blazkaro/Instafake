@@ -1,5 +1,5 @@
 ﻿namespace Instafake.Notifications.Dtos;
 
-public record PostAuthorDto(Guid Id, string Name, Uri AvatarUrl)
+public record PostAuthorDto(string Id, string Name, Uri AvatarUrl)
 {
 }

@@ -4,6 +4,6 @@ using Wolverine.Attributes;
 namespace Instafake.Notifications.Events;
 
 [MessageIdentity("post.notification")]
-public record PostNotification(Guid PostId, PostAuthorDto Author, List<Guid> FollowerIds)
+public record PostNotification(Guid PostId, PostAuthorDto Author, List<string> FollowerIds)
 {
 }

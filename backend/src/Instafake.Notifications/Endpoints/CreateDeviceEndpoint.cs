@@ -18,10 +18,10 @@ public static class CreateDeviceEndpoint
         }
 
         var atSub = context.User.Identity?.Name;
-        if (string.IsNullOrEmpty(atSub) || !Guid.TryParse(atSub, out var userId))
+        if (string.IsNullOrEmpty(atSub))
             throw new AuthenticationException("User is not authenticated");
 
-        var device = new Device { UserId = userId, DeviceToken = deviceToken };
+        var device = new Device { UserId = atSub, DeviceToken = deviceToken };
 
         try
         {
