@@ -105,7 +105,11 @@ var bff = builder.AddProject<Projects.Instafake_BFF>("instafake-bff")
     .WithReference(postsApi)
     .WaitFor(postsApi)
     .WithReference(multimediaApi)
-    .WaitFor(multimediaApi);
+    .WaitFor(multimediaApi)
+    .WithReference(profilesApi)
+    .WaitFor(profilesApi)
+    .WithReference(notifications)
+    .WaitFor(notifications);
 
 frontend.WithEnvironment("VITE_BFF_URL", bff.GetEndpoint("https"));
 
