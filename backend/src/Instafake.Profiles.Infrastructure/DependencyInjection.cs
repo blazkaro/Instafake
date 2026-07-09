@@ -5,6 +5,7 @@ using Instafake.Profiles.Application.Repositories;
 using Instafake.Profiles.Domain.Events;
 using Instafake.Profiles.Infrastructure.DbContexts;
 using Instafake.Profiles.Infrastructure.Events.Self;
+using Instafake.Profiles.Infrastructure.Interceptors;
 using Instafake.Profiles.Infrastructure.Repositories;
 using Instafake.Profiles.Infrastructure.Services;
 using JasperFx.Resources;
@@ -25,19 +26,21 @@ public static class DependencyInjection
     {
         public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
         {
-            Action<DbContextOptionsBuilder> configureDb = cfg =>
+            Action<IServiceProvider, DbContextOptionsBuilder> configureDb = (serviceProvider, cfg) =>
             {
+                var interceptor = serviceProvider.GetRequiredService<SequenceInterceptor>();
                 cfg.UseNpgsql(configuration.GetConnectionString("profiles-api-db"))
-                   .UseSnakeCaseNamingConvention(); // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
+                   .UseSnakeCaseNamingConvention() // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
+                   .AddInterceptors(interceptor);
             };
 
             services.AddDbContextWithWolverineIntegration<ProfilesDbContext>(configureDb);
-            services.AddDbContextFactory<ProfilesDbContext>(configureDb);
 
             services.AddScoped<IWriteRepository<Domain.Entities.Profile>, ProfileWriteRepository>();
             services.AddScoped<IWriteRepository<Domain.Entities.Follow>, FollowWriteRepository>();
 
             services.AddSingleton<IProfileSequenceAllocator, ProfileSequenceAllocator>();
+            services.AddSingleton<SequenceInterceptor>();
 
             services.Configure<FollowBucketOptions>(cfg =>
             {

@@ -1,4 +1,5 @@
 ﻿using Instafake.Profiles.Application.Options;
+using Instafake.Profiles.Infrastructure.DbContexts;
 using Instafake.Profiles.Infrastructure.Entities;
 using Instafake.Profiles.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ internal class SequenceInterceptor(IProfileSequenceAllocator profileSequenceAllo
         {
             if (entry.State == EntityState.Added)
             {
-                var seq = await _profileSequenceAllocator.Next(entry.Entity.ProfileId);
+                var seq = await _profileSequenceAllocator.Next(entry.Entity.ProfileId, (ProfilesDbContext)eventData.Context);
                 entry.Entity.Seq = seq;
                 entry.Entity.BucketId = (int)(seq / _bucketOptions.BucketSize);
             }

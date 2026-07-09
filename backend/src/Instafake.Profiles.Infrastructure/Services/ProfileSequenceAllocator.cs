@@ -4,10 +4,8 @@ using System.Collections.Concurrent;
 
 namespace Instafake.Profiles.Infrastructure.Services;
 
-public class ProfileSequenceAllocator(IDbContextFactory<ProfilesDbContext> dbContextFactory) : IProfileSequenceAllocator
+public class ProfileSequenceAllocator : IProfileSequenceAllocator
 {
-    private readonly IDbContextFactory<ProfilesDbContext> _dbContextFactory = dbContextFactory;
-
     private class LeaseBlock
     {
         public long StartSeq { get; set; }
@@ -21,7 +19,7 @@ public class ProfileSequenceAllocator(IDbContextFactory<ProfilesDbContext> dbCon
     private readonly ConcurrentDictionary<string, LeaseBlock> _profileLeaseBlocks = new();
     private const int BLOCK_SIZE = 1000;
 
-    public async Task<long> Next(string profileId)
+    public async Task<long> Next(string profileId, ProfilesDbContext dbContext)
     {
         var lease = _profileLeaseBlocks.GetOrAdd(profileId, _ => new LeaseBlock());
 
@@ -36,13 +34,13 @@ public class ProfileSequenceAllocator(IDbContextFactory<ProfilesDbContext> dbCon
             }
 
             // We trust that the counter was inserted earlier when the profile was created
-            await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
             var nextSeq = await dbContext.Database
                 .SqlQuery<long>($@"
                     UPDATE profile_counters
                     SET next_seq = next_seq + {BLOCK_SIZE}
                     WHERE profile_id = {profileId}
                     RETURNING next_seq")
+                .AsAsyncEnumerable()
                 .FirstAsync();
 
             lease.EndSeq = nextSeq - 1;

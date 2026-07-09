@@ -13,15 +13,23 @@ public class GetProfileQueryHandler
     [NonTransactional]
     public async Task<Result<ProfileDto>> Handle(GetProfileQuery request, ProfilesDbContext dbContext, CancellationToken cancellationToken)
     {
-        var profile = await dbContext.Profiles
+        var dto = await dbContext.Profiles
             .AsNoTracking()
-            .Where(profile => profile.Name == request.UserName)
+            .Where(profile => profile.Name == request.ProfileName)
+            .Select(p => new ProfileDto(
+                p.Id,
+                p.Name,
+                p.AvatarUrl,
+                p.PostsCount,
+                p.FollowersCount,
+                p.Description,
+                p.Follows.Any(f => f.FollowerId == request.UserId))
+            )
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (profile == default)
+        if (dto == default)
             return Result.Fail(new ResourceNotFound());
 
-        var dto = new ProfileDto(profile.Id, profile.Name, profile.AvatarUrl, profile.PostsCount, profile.FollowersCount, profile.Description);
         return Result.Ok(dto);
     }
 }

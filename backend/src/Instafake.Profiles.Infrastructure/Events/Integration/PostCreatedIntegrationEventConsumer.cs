@@ -35,4 +35,13 @@ public class PostCreatedIntegrationEventConsumer
 
         return [fanoutNext];
     }
+
+    public async Task Handle(PostCreatedIntegrationEvent ev, ProfilesDbContext dbContext, CancellationToken cancellationToken)
+    {
+        await dbContext.Profiles
+            .Where(profile => profile.Id == ev.AuthorId)
+            .ExecuteUpdateAsync(setters => setters
+            .SetProperty(p => p.PostsCount, p => p.PostsCount + 1),
+            cancellationToken);
+    }
 }
