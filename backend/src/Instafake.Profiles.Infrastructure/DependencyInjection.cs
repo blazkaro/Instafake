@@ -26,15 +26,12 @@ public static class DependencyInjection
     {
         public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
         {
-            Action<IServiceProvider, DbContextOptionsBuilder> configureDb = (serviceProvider, cfg) =>
+            services.AddDbContextWithWolverineIntegration<ProfilesDbContext>((serviceProvider, cfg) =>
             {
                 var interceptor = serviceProvider.GetRequiredService<SequenceInterceptor>();
                 cfg.UseNpgsql(configuration.GetConnectionString("profiles-api-db"))
-                   .UseSnakeCaseNamingConvention() // we let wolverine manage migrations, so we need consistent naming convention between the db context and the migrations
                    .AddInterceptors(interceptor);
-            };
-
-            services.AddDbContextWithWolverineIntegration<ProfilesDbContext>(configureDb);
+            });
 
             services.AddScoped<IWriteRepository<Domain.Entities.Profile>, ProfileWriteRepository>();
             services.AddScoped<IWriteRepository<Domain.Entities.Follow>, FollowWriteRepository>();
@@ -63,7 +60,6 @@ public static class DependencyInjection
                 options.Discovery.IncludeAssembly(typeof(DependencyInjection).Assembly);
 
                 options.PersistMessagesWithPostgresql(configuration.GetConnectionString("profiles-api-db"));
-                options.UseEntityFrameworkCoreWolverineManagedMigrations();
 
                 options.Policies.AutoApplyTransactions();
 
@@ -128,8 +124,6 @@ public static class DependencyInjection
                         }
                     }).UseDurableInbox();
             });
-
-            builder.UseResourceSetupOnStartup();
         }
     }
 }

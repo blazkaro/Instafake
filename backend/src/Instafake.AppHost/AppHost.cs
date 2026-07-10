@@ -74,14 +74,12 @@ var profilesApi = builder.AddProject<Projects.Instafake_Profiles_Api>("instafake
     .WaitFor(profilesApiDb)
     .WithKafkaHostEnvironment(kafka);
 
-// manages migrations on its own
-/*
+
 profilesApi.AddEFMigrations("profiles-api-migrations", "ProfilesDbContext")
     .WithMigrationsProject("../Instafake.Profiles.Infrastructure")
     .WithReference(profilesApi)
     .WaitFor(profilesApi)
     .RunDatabaseUpdateOnStart();
-*/
 
 var notificationsDb = npgsql.AddDatabase("notifications-db");
 var notifications = builder.AddProject<Projects.Instafake_Notifications>("instafake-notifications")
