@@ -7,5 +7,7 @@ export enum ApiPaths {
     Auth = '/auth',
     Posts = '/posts',
     Multimedia = '/multimedia',
-    Likes = '/likes'
+    Likes = '/likes',
+    Profiles = '/profiles',
+    Follows = '/follows'
 }

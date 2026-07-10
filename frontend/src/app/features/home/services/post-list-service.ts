@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { PaginatedListServiceBase } from '../../shared/pagination/paginated-list-service-base';
-import { Post } from '../../shared/post/models/post';
-import { PostsService } from '../../shared/post/services/posts-service';
-import { PostEventsService } from '../../shared/post/services/post-events-service';
+import { PaginatedListServiceBase } from '../../../shared/pagination/paginated-list-service-base';
+import { Post } from '../../../shared/post/models/post';
+import { PostsService } from '../../../shared/post/services/posts-service';
+import { PostEventsService } from '../../../shared/post/services/post-events-service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface Params {

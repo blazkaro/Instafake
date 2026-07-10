@@ -17,17 +17,50 @@
             </div>
         </div>
     </div>
-    <div class="posts-container">
-        <div class="posts">
-            @for (post of postListService.items(); track post.id) {
-            <app-post-component [post]="post" class="post"></app-post-component>
+
+    <div class="main">
+        @if(this.profile()){
+        <div class="profile">
+            <div class="profile-header">
+                <div class="avatar" size="l" tuiAvatar [round]="false">
+                    <img src="{{profile()!.avatarUrl}}" alt="{{profile()!.userName}}">
+                </div>
+                <div class="profile-name">
+                    {{profile()?.userName}}
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div><span>Followers</span> {{profile()!.followersCount | compactNumber}}</div>
+                <div><span>Posts</span> {{profile()!.postsCount | compactNumber}}</div>
+            </div>
+            <div class="profile-description">
+                {{profile()?.description}}
+            </div>
+            <div class="profile-actions">
+                <button tuiButton iconStart="@tui.bell-ring" size="s" (click)="follow()"
+                    [appearance]="profile()!.followedByUser ? 'primary-grayscale' : 'primary'">{{profile()!.followedByUser
+                    ? 'Unfollow' : 'Follow'}}</button>
+            </div>
+        </div>
+        }
+
+        @if(this.profileResource.isLoading()){
+        <tui-loader></tui-loader>
+        }
+        @else{
+        <div class="posts-container">
+            <div class="posts">
+                @for (post of postListService.items(); track post.id) {
+                <app-post-component [post]="post" class="post"></app-post-component>
+                }
+            </div>
+
+            <div #sentinel class="sentinel"></div>
+
+            @if(postListService.isLoading()){
+            <tui-loader></tui-loader>
             }
         </div>
-
-        <div #sentinel class="sentinel"></div>
-
-        @if(postListService.isLoading()){
-        <tui-loader></tui-loader>
         }
     </div>
 </div>
