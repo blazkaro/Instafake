@@ -1,8 +1,7 @@
-import { Component, input } from '@angular/core';
-import { PostComment } from '../../models/post-comment';
-import { TuiAvatar, TuiAvatarLabeled } from "@taiga-ui/kit";
-import { ɵɵDir } from "@angular/cdk/scrolling";
 import { DatePipe } from '@angular/common';
+import { Component, input } from '@angular/core';
+import { TuiAvatar, TuiAvatarLabeled } from '@taiga-ui/kit';
+import { PostComment } from '../../models/post-comment';
 
 @Component({
   selector: 'app-post-comment-component',

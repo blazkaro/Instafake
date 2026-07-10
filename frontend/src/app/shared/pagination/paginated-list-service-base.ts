@@ -27,7 +27,7 @@ export abstract class PaginatedListServiceBase<TData, TParams> {
         map(response => ({ response, params: ctx.params })) // propagate params locally to avoid mixing up values
       ),
       injector,
-      ...(params && { params: () => ({ ...params(), cursor: this._cursor() }) }),
+      ...(params && { params: (ctx) => ({ ...params(ctx), cursor: this._cursor() }) }),
       ...(equal && { equal: (a, b) => equal(a.response, b.response) }),
       ...(defaultValue && {
         defaultValue: {

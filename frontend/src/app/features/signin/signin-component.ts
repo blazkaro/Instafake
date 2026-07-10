@@ -6,10 +6,10 @@ import { apiConfig, ApiPaths } from '../../shared/api-config';
   selector: 'app-signin-component',
   imports: [TuiIcon, TuiHint, TuiButton],
   templateUrl: './signin-component.html',
-  styleUrl: './signin-component.scss'
+  styleUrl: './signin-component.scss',
 })
 export class SigninComponent {
   redirectToIdentityProvider() {
-    window.location.href = `${apiConfig.baseUrl}${ApiPaths.Auth}/signin`
+    window.location.href = `${apiConfig.baseUrl}${ApiPaths.Auth}/signin`;
   }
 }

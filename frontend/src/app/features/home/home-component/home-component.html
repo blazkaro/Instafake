@@ -51,7 +51,7 @@
         <div class="posts-container">
             <div class="posts">
                 @for (post of postListService.items(); track post.id) {
-                <app-post-component [post]="post" class="post"></app-post-component>
+                <app-post-overview-component [post]="post" class="post"></app-post-overview-component>
                 }
             </div>
 
