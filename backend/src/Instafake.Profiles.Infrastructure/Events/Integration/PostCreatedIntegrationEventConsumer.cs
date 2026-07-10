@@ -27,10 +27,11 @@ public class PostCreatedIntegrationEventConsumer
         var maxSeq = await dbContext.ProfileCounters
             .AsNoTracking()
             .Where(p => p.ProfileId == authorDto.Id)
-            .MaxAsync(p => p.NextSeq, cancellationToken);
+            .Select(p => p.NextSeq)
+            .SingleOrDefaultAsync(cancellationToken);
 
         int bucketSize = bucketOptions.Value.BucketSize;
-        int totalBuckets = (int)((maxSeq + bucketSize - 1) / bucketSize);
+        int totalBuckets = Math.Max(1, (int)Math.Ceiling((double)maxSeq / bucketSize)); // maxSeq is first free seq, so we don't add 1 (but take care of maxSeq=0)
         var fanoutNext = new NotificationFanoutNext(ev.PostId, authorDto, totalBuckets, 0, 500);
 
         return [fanoutNext];

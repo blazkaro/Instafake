@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Instafake.Profiles.Application;
+using Instafake.Profiles.Application.Integration.Outgoing;
 using Instafake.Profiles.Application.Options;
 using Instafake.Profiles.Application.Repositories;
 using Instafake.Profiles.Domain.Events;
@@ -66,7 +67,8 @@ public static class DependencyInjection
                 options.UseEntityFrameworkCoreTransactions();
 
                 var kafkaHost = configuration.GetRequiredSection("Kafka:Host").Get<ConsumerConfig>()!;
-                options.UseKafka(kafkaHost.BootstrapServers);
+                options.UseKafka(kafkaHost.BootstrapServers)
+                    .AutoProvision();
 
                 var kafkaDefaultConsumer = configuration.GetSection("Kafka:Consumers:Default").Get<ConsumerConfig>() ?? new ConsumerConfig();
 
@@ -85,6 +87,10 @@ public static class DependencyInjection
                     .ToLocalQueue("follow-events");
 
                 options.PublishMessage<NotificationFanoutNext>()
+                    .ToKafkaTopic("post-fanout-notifications")
+                    .UseDurableOutbox();
+
+                options.PublishMessage<PostNotification>()
                     .ToKafkaTopic("post-notifications")
                     .UseDurableOutbox();
 
@@ -112,13 +118,13 @@ public static class DependencyInjection
                         }
                     }).UseDurableInbox();
 
-                var postNotificationsConsumer = new ConsumerConfig(kafkaDefaultConsumer);
-                configuration.GetSection("Kafka:Consumers:PostNotifications").Bind(postNotificationsConsumer);
+                var postFanoutNotificationsConsumer = new ConsumerConfig(kafkaDefaultConsumer);
+                configuration.GetSection("Kafka:Consumers:PostFanoutNotifications").Bind(postFanoutNotificationsConsumer);
 
-                options.ListenToKafkaTopic("post-notifications")
+                options.ListenToKafkaTopic("post-fanout-notifications")
                     .ConfigureConsumer(cfg =>
                     {
-                        foreach (var keyPair in postNotificationsConsumer)
+                        foreach (var keyPair in postFanoutNotificationsConsumer)
                         {
                             cfg.Set(keyPair.Key, keyPair.Value);
                         }

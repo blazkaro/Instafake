@@ -36,10 +36,10 @@ public class ProfileSequenceAllocator : IProfileSequenceAllocator
             // We trust that the counter was inserted earlier when the profile was created
             var nextSeq = await dbContext.Database
                 .SqlQuery<long>($@"
-                    UPDATE profile_counters
-                    SET next_seq = next_seq + {BLOCK_SIZE}
-                    WHERE profile_id = {profileId}
-                    RETURNING next_seq")
+                    UPDATE ""ProfileCounters""
+                    SET ""NextSeq"" = ""NextSeq"" + {BLOCK_SIZE}
+                    WHERE ""ProfileId"" = {profileId}
+                    RETURNING ""NextSeq""")
                 .AsAsyncEnumerable()
                 .FirstAsync();
 

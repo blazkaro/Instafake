@@ -1,27 +1,36 @@
 ﻿using FirebaseAdmin.Messaging;
 using Instafake.Notifications.DbContexts;
 using Instafake.Notifications.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Authentication;
+using System.Security.Claims;
 
 namespace Instafake.Notifications.Endpoints;
 
+public class CreateDeviceRequest
+{
+    public string? DeviceToken { get; set; }
+}
+
 public static class CreateDeviceEndpoint
 {
-    public static async Task<IResult> Create(string? deviceToken, DevicesDbContext dbContext, HttpContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> Create(CreateDeviceRequest? req, DevicesDbContext dbContext, HttpContext context, CancellationToken cancellationToken)
     {
-        var valid = await IsTokenValid(deviceToken);
+        var valid = await IsTokenValid(req?.DeviceToken);
         if (!valid)
         {
             return Results.BadRequest("Device token is invalid");
         }
 
-        var atSub = context.User.Identity?.Name;
+        var atSub = context.User.Claims.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(atSub))
             throw new AuthenticationException("User is not authenticated");
 
-        var device = new Device { UserId = atSub, DeviceToken = deviceToken };
+        var device = new Device { UserId = atSub, DeviceToken = req.DeviceToken };
 
         try
         {
@@ -56,12 +65,9 @@ public static class CreateDeviceEndpoint
             await FirebaseMessaging.DefaultInstance.SendAsync(message, dryRun: true);
             return true;
         }
-        catch (FirebaseMessagingException ex)
+        catch (FirebaseMessagingException)
         {
-            if (ex.MessagingErrorCode == MessagingErrorCode.Unregistered)
-                return false;
-
-            throw;
+            return false;
         }
     }
 }

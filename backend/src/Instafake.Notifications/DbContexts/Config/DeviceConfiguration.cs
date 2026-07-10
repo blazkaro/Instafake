@@ -9,7 +9,7 @@ public class DeviceConfiguration : IEntityTypeConfiguration<Device>
     public void Configure(EntityTypeBuilder<Device> builder)
     {
         builder
-            .HasNoKey();
+            .HasKey(p => new { p.UserId, p.DeviceToken });
 
         builder
             .HasIndex(p => p.UserId);
