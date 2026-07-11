@@ -9,5 +9,6 @@ export enum ApiPaths {
     Multimedia = '/multimedia',
     Likes = '/likes',
     Profiles = '/profiles',
-    Follows = '/follows'
+    Follows = '/follows',
+    Notifications = '/notifications'
 }

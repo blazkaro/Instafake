@@ -1,3 +1,3 @@
 export interface ToastData{
-    message: string;
+    message?: string;
 }

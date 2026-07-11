@@ -13,6 +13,7 @@ import { Profile, ProfilesService } from '../services/profiles-service';
 import { CompactNumberPipe } from "../../../shared/pipes/compact-number-pipe";
 import { catchError, debounceTime, Observable, of, Subject, switchMap } from 'rxjs';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FcmService } from '../../../core/services/fcm-service';
 
 @Component({
   selector: 'app-home-component',
@@ -26,6 +27,7 @@ export class HomeComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly infiniteScrollService = inject(InfiniteScrollService);
   private readonly profileService = inject(ProfilesService);
+  private readonly fcmService = inject(FcmService);
 
   protected searchInput: string[] = [];
   private sentinel = viewChild<ElementRef<HTMLElement>>('sentinel');
@@ -102,12 +104,13 @@ export class HomeComponent {
     }
 
     this.toggleFollow$.next({ profileId, isFollowing: this.profile()!.followedByUser });
-    
+
     // update locally (optimistic, may be reverted in event handler), do not reload resource
     if (this.profile()?.followedByUser) {
       this.profileResource.update((val) => ({ ...val!, followedByUser: !val!.followedByUser, followersCount: val!.followersCount - 1 }));
     } else {
       this.profileResource.update((val) => ({ ...val!, followedByUser: !val!.followedByUser, followersCount: val!.followersCount + 1 }));
+      this.fcmService.askForNotifications();
     }
   }
 }

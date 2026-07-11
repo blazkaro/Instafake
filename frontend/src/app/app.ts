@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TuiRoot } from '@taiga-ui/core';
+import { FcmService } from './core/services/fcm-service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,10 @@ import { TuiRoot } from '@taiga-ui/core';
 })
 export class App {
   protected readonly title = signal('Instafake');
+
+  private readonly fcmService = inject(FcmService);
+
+  constructor() {
+    this.fcmService.listenToMessages();
+  }
 }
