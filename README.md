@@ -42,3 +42,15 @@ App that tries to behave (not necessarily look) like Instagram. Built with high-
     - Some entities are denormalized. Why? You already know :). For example, reading count of items from row is much faster than performing COUNT().
     - Neither MSSQL nor PostgreSQL are good for +1 or -1 updates (updating denormalized columns, e.g. likes count), due to locks, disk I/O just for simple operations, and MVVC in case of PostgreSQL. I'm planning to use Redis to buffer these operations, and sync the values using background workers.
     - Composite indexes on {date, id} (id is tie breaker). They are used for very efficient cursor pagination - we can use WHERE on these fields, and pagination is done in O(logN + K), without growing linearly like with offset. Without this composite index, the cursor pagination would still need to perform O(n) search.
+
+### Profiles service
+- #### Database
+    - Code is prepared to work with distributed database. For Follows table, sharding has to be done with on ProfileId and BucketId.
+
+- #### Sending notifications to followers
+    - We could easily just use Firebase topics, but I wanted to do some work.
+    - To maximize performance, fanout pattern has been used. When we receive "post.created" event, we emit initial "post.notification.fanout.next" to the Kafka. That specific event handles batch of buckets (500), and the server which receives it sends another "post.notification.fanout.next" to process, containing another batch of buckets. This way, we know where we fail and where to start after failure, and by using batches we can parallelize sending "post.notification", so that notifications can be handled in parallel by notifications service instances. For user with 100_000_000 followers, with proposed configuration (bucket_size = 5000, batch_size = 500), there is gonna be 20_000 buckets. We handle 500 buckets per event, so 40 "hops" (fanout.next) are gonna be emitted, which isn't much. Then, we select all follower ids from bucket batches (5000 * 500 = 2_500_000) which is pretty much but follower id isnt very heavy (we can change params or select in batches). For every bucket, we emit "post.notification" to Kafka, which contains all follower ids from single bucket (5000 follower ids).
+
+### Notifications service
+- #### Handling "post.notification"
+    - When we receive "post.notification", we select device tokens corresponding to given follower ids (up to 15_000 assuming every user has 3 devices). Then, in batches of 500 tokens, we send multicast messages to Google FCM. It is around 15_000/500 = 30 requests to Google FCM.
