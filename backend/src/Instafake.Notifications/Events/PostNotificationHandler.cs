@@ -1,6 +1,7 @@
 ﻿using FirebaseAdmin.Messaging;
 using Instafake.Notifications.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using Wolverine.Attributes;
 
 namespace Instafake.Notifications.Events;
@@ -18,6 +19,8 @@ public class PostNotificationHandler
             .Select(p => p.DeviceToken)
             .ToListAsync(cancellationToken);
 
+        var authorJson = JsonSerializer.Serialize(ev.Author);
+
         var tokenBatches = tokens.Chunk(GOOGLE_FCM_BATCH_SIZE);
         var sendTasks = tokenBatches.Select(async tokensBatch =>
         {
@@ -27,6 +30,11 @@ public class PostNotificationHandler
                 Notification = new FirebaseAdmin.Messaging.Notification()
                 {
                     Title = $"{ev.Author.Name} just posted \U0001F440"
+                },
+                Data = new Dictionary<string, string>
+                {
+                    { "author", authorJson },
+                    { "post_id", ev.PostId.ToString() }
                 }
             };
 
