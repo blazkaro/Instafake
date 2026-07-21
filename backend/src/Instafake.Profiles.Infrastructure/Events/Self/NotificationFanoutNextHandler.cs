@@ -11,21 +11,12 @@ namespace Instafake.Profiles.Infrastructure.Events.Self;
 
 public class NotificationFanoutNextHandler
 {
-    // TODO: Currently, to pass next fanout message to the Kafka, we are waiting till we create (not emit) all post.notification events.
-    // It takes time because we need to query follower ids from db
-    // Passing a fanout message and actually processing it should be done by two different handlers.
     [NonTransactional]
     public async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext, ProfilesDbContext dbContext, IOptions<FollowBucketOptions> bucketOptions, CancellationToken cancellationToken)
     {
         var messages = new OutgoingMessages();
 
-        var nextBucket = Math.Min(fanoutNext.NextBucket + fanoutNext.BatchSize, fanoutNext.TotalBuckets);
-        if (nextBucket < fanoutNext.TotalBuckets)
-        {
-            var fanoutContinuation = fanoutNext with { NextBucket = nextBucket };
-            messages.Add(fanoutContinuation);
-        }
-
+        var nextBucket = GetNextBucket(fanoutNext);
         var bucketFollower = await dbContext.Follows
             .AsNoTracking()
             .Where(p => p.ProfileId == fanoutNext.Author.Id && p.BucketId >= fanoutNext.NextBucket && p.BucketId < nextBucket)
@@ -45,5 +36,25 @@ public class NotificationFanoutNextHandler
         }
 
         return messages;
+    }
+
+    [NonTransactional]
+    public async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext)
+    {
+        var messages = new OutgoingMessages();
+
+        var nextBucket = GetNextBucket(fanoutNext);
+        if (nextBucket < fanoutNext.TotalBuckets)
+        {
+            var fanoutContinuation = fanoutNext with { NextBucket = nextBucket };
+            messages.Add(fanoutContinuation);
+        }
+
+        return messages;
+    }
+
+    private static int GetNextBucket(NotificationFanoutNext fanoutNext)
+    {
+        return Math.Min(fanoutNext.NextBucket + fanoutNext.BatchSize, fanoutNext.TotalBuckets);
     }
 }
