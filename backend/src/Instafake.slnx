@@ -6,10 +6,6 @@
     <Project Path="Instafake.Notifications/Instafake.Notifications.csproj" />
     <Project Path="Instafake.ServiceDefaults/Instafake.ServiceDefaults.csproj" />
   </Folder>
-  <Folder Name="/src/BuildingBlocks/">
-    <Project Path="Instafake.BuildingBlocks.Application/Instafake.BuildingBlocks.Application.csproj" Id="ecd1fbee-c6cd-4314-b924-78963ddcfe53" />
-    <Project Path="Instafake.BuildingBlocks.Domain/Instafake.BuildingBlocks.Domain.csproj" Id="a13ac1d7-6cbc-4e02-9ca8-bff7af9e691e" />
-  </Folder>
   <Folder Name="/src/ExternalEvents/">
     <Project Path="Instafake.IdentityEventsIngress/Instafake.IdentityEventsIngress.csproj" />
   </Folder>
@@ -25,4 +21,6 @@
     <Project Path="Instafake.Profiles.Domain/Instafake.Profiles.Domain.csproj" Id="8112d3e8-1e3a-45a0-b254-4fa2fdd789aa" />
     <Project Path="Instafake.Profiles.Infrastructure/Instafake.Profiles.Infrastructure.csproj" Id="baa15be0-957b-4090-ac3c-e96a5ec9dfea" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/unit/" />
 </Solution>
