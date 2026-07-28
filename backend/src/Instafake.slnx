@@ -22,5 +22,7 @@
     <Project Path="Instafake.Profiles.Infrastructure/Instafake.Profiles.Infrastructure.csproj" Id="baa15be0-957b-4090-ac3c-e96a5ec9dfea" />
   </Folder>
   <Folder Name="/tests/" />
-  <Folder Name="/tests/unit/" />
+  <Folder Name="/tests/unit/">
+    <Project Path="../tests/Instafake.Profiles.UnitTests/Instafake.Profiles.UnitTests.csproj" />
+  </Folder>
 </Solution>

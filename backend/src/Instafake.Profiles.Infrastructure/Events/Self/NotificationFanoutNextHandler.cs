@@ -12,7 +12,7 @@ namespace Instafake.Profiles.Infrastructure.Events.Self;
 public class NotificationFanoutNextHandler
 {
     [NonTransactional]
-    public async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext, ProfilesDbContext dbContext, IOptions<FollowBucketOptions> bucketOptions, CancellationToken cancellationToken)
+    public static async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext, ProfilesDbContext dbContext, IOptions<FollowBucketOptions> bucketOptions, CancellationToken cancellationToken)
     {
         var messages = new OutgoingMessages();
 
@@ -39,7 +39,7 @@ public class NotificationFanoutNextHandler
     }
 
     [NonTransactional]
-    public async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext)
+    public static async Task<OutgoingMessages> Handle(NotificationFanoutNext fanoutNext)
     {
         var messages = new OutgoingMessages();
 
